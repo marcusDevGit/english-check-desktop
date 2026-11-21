@@ -4,6 +4,7 @@ import {
   UpdatePracticeReviewRequestSchema
 } from '../../shared/ipc-contracts'
 import {
+  getLearningTracksProgress,
   getPhonemeErrors,
   getPracticeItems,
   getStudyStats,
@@ -19,6 +20,10 @@ export function registerDbHandlers(): void {
     IPC_CHANNELS.DB_SAVE_SESSION,
     SaveSessionRequestSchema,
     (input) => saveStudySession(input)
+  )
+
+  registerValidatedHandler(IPC_CHANNELS.DB_GET_TRACKS, null, () =>
+    getLearningTracksProgress()
   )
 
   registerValidatedHandler(IPC_CHANNELS.DB_GET_PRACTICE_ITEMS, null, () =>

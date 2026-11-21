@@ -10,11 +10,31 @@ export const studySessions = sqliteTable('study_sessions', {
     .$defaultFn(() => new Date().toISOString())
 })
 
+export const learningTracks = sqliteTable('learning_tracks', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  slug: text('slug').notNull().unique(),
+  titlePt: text('title_pt').notNull(),
+  titleEn: text('title_en').notNull(),
+  descriptionPt: text('description_pt').notNull(),
+  descriptionEn: text('description_en').notNull(),
+  level: text('level', { enum: ['A2', 'B1', 'B2', 'C1'] }).notNull(),
+  orderIndex: integer('order_index').notNull().default(0)
+})
+
 export const practiceItems = sqliteTable('practice_items', {
   id: integer('id').primaryKey({ autoIncrement: true }),
+  trackId: integer('track_id').references(() => learningTracks.id),
+  activityType: text('activity_type', {
+    enum: ['pronunciation', 'minimal_pair', 'active_recall', 'shadowing']
+  })
+    .notNull()
+    .default('pronunciation'),
   sentence: text('sentence').notNull().unique(),
   ipa: text('ipa').notNull(),
   category: text('category').notNull(),
+  promptPt: text('prompt_pt'),
+  contrastHint: text('contrast_hint'),
+  orderIndex: integer('order_index').notNull().default(0),
   attemptsCount: integer('attempts_count').notNull().default(0),
   lastScore: integer('last_score'),
   nextReviewAt: text('next_review_at')

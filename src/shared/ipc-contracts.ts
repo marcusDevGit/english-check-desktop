@@ -93,6 +93,44 @@ export const CheckGrammarResponseSchema = z.object({
 })
 export type CheckGrammarResponse = z.infer<typeof CheckGrammarResponseSchema>
 
+export const EvaluateRecallRequestSchema = z.object({
+  promptPt: z.string().trim().min(1).max(1000),
+  expectedEnglish: z.string().trim().min(1).max(1000),
+  userAnswer: z.string().trim().min(1).max(1500),
+  practiceItemId: z.number().int().positive().optional()
+})
+export type EvaluateRecallRequest = z.infer<typeof EvaluateRecallRequestSchema>
+
+export const EvaluateRecallResponseSchema = z.object({
+  score: z.number().min(0).max(100),
+  isMeaningAccurate: z.boolean(),
+  feedback: z.string(),
+  betterPhrasing: z.string(),
+  grammarNote: z.string()
+})
+export type EvaluateRecallResponse = z.infer<typeof EvaluateRecallResponseSchema>
+
+export const GenerateDrillsRequestSchema = z.object({
+  count: z.number().int().min(1).max(5).default(3)
+})
+export type GenerateDrillsRequest = z.infer<typeof GenerateDrillsRequestSchema>
+
+export const GeneratedDrillsPayloadSchema = z.object({
+  drills: z
+    .array(
+      z.object({
+        sentence: z.string().trim().min(5).max(300),
+        ipa: z.string().trim().min(3).max(400),
+        category: z.string().trim().min(2).max(60),
+        promptPt: z.string().trim().min(3).max(300),
+        contrastHint: z.string().trim().min(3).max(300),
+        activityType: z.enum(['pronunciation', 'minimal_pair'])
+      })
+    )
+    .min(1)
+    .max(5)
+})
+
 export const SessionTypeSchema = z.enum(['pronunciation', 'writing', 'pomodoro'])
 export type SessionType = z.infer<typeof SessionTypeSchema>
 
@@ -121,11 +159,42 @@ export const StudyStatsSchema = z.object({
 })
 export type StudyStats = z.infer<typeof StudyStatsSchema>
 
+export const ActivityTypeSchema = z.enum([
+  'pronunciation',
+  'minimal_pair',
+  'active_recall',
+  'shadowing'
+])
+export type ActivityType = z.infer<typeof ActivityTypeSchema>
+
+export const TrackLevelSchema = z.enum(['A2', 'B1', 'B2', 'C1'])
+export type TrackLevel = z.infer<typeof TrackLevelSchema>
+
+export const LearningTrackProgressSchema = z.object({
+  id: z.number().int(),
+  slug: z.string(),
+  titlePt: z.string(),
+  titleEn: z.string(),
+  descriptionPt: z.string(),
+  descriptionEn: z.string(),
+  level: TrackLevelSchema,
+  orderIndex: z.number().int(),
+  totalItems: z.number().int(),
+  completedItems: z.number().int(),
+  nextItemId: z.number().int().nullable()
+})
+export type LearningTrackProgress = z.infer<typeof LearningTrackProgressSchema>
+
 export const PracticeItemSchema = z.object({
   id: z.number().int(),
+  trackId: z.number().int().nullable(),
+  activityType: ActivityTypeSchema,
   sentence: z.string(),
   ipa: z.string(),
   category: z.string(),
+  promptPt: z.string().nullable(),
+  contrastHint: z.string().nullable(),
+  orderIndex: z.number().int(),
   attemptsCount: z.number().int(),
   lastScore: z.number().nullable(),
   nextReviewAt: z.string().nullable()
@@ -191,10 +260,17 @@ export interface EnglishChecksApi {
   checkGrammar: (
     payload: CheckGrammarRequest
   ) => Promise<IpcResult<CheckGrammarResponse>>
+  evaluateRecall: (
+    payload: EvaluateRecallRequest
+  ) => Promise<IpcResult<EvaluateRecallResponse>>
+  generateCustomDrills: (
+    payload?: GenerateDrillsRequest
+  ) => Promise<IpcResult<PracticeItem[]>>
   getStats: () => Promise<IpcResult<StudyStats>>
   saveSession: (
     payload: SaveSessionRequest
   ) => Promise<IpcResult<StudySession>>
+  getTracks: () => Promise<IpcResult<LearningTrackProgress[]>>
   getPracticeItems: () => Promise<IpcResult<PracticeItem[]>>
   updatePracticeReview: (
     payload: UpdatePracticeReviewRequest

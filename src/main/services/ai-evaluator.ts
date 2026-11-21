@@ -2,11 +2,16 @@ import { GoogleGenAI } from '@google/genai'
 import {
   AnalyzePronunciationResponseSchema,
   CheckGrammarResponseSchema,
+  EvaluateRecallResponseSchema,
+  GeneratedDrillsPayloadSchema,
   type AnalyzePronunciationRequest,
   type AnalyzePronunciationResponse,
   type AppLanguage,
   type CheckGrammarRequest,
-  type CheckGrammarResponse
+  type CheckGrammarResponse,
+  type EvaluateRecallRequest,
+  type EvaluateRecallResponse,
+  type PhonemeError
 } from '../../shared/ipc-contracts'
 import { getAppLanguage, getGeminiApiKey, getGeminiModel } from './settings-store'
 
@@ -252,6 +257,115 @@ Return ONLY a valid JSON object matching this exact TypeScript structure:
 
     const parsed = parseJsonResponse(response.text)
     return CheckGrammarResponseSchema.parse(parsed)
+  } catch (error) {
+    throw formatGeminiError(error, language)
+  }
+}
+
+export async function evaluateActiveRecall(
+  input: EvaluateRecallRequest
+): Promise<EvaluateRecallResponse> {
+  const { client, model, language } = getAiClient()
+  const feedbackLang =
+    language === 'pt-BR'
+      ? 'Write "feedback" and "grammarNote" in clear, encouraging Brazilian Portuguese (pt-BR). Keep "betterPhrasing" in natural English.'
+      : 'Write all fields in clear English.'
+
+  const prompt = `You are an English coach evaluating an Active Recall (PT-BR -> EN) translation/speaking attempt.
+Original Portuguese intention: "${input.promptPt}"
+Reference English sentence: "${input.expectedEnglish}"
+Learner's English attempt: "${input.userAnswer}"
+${feedbackLang}
+
+Evaluate if the learner accurately conveyed the Portuguese meaning in natural English (even if they used valid synonyms instead of the exact reference sentence).
+
+Return ONLY valid JSON:
+{
+  "score": number (0-100),
+  "isMeaningAccurate": boolean,
+  "feedback": string (1-2 concise sentences),
+  "betterPhrasing": string (the most natural English version preserving their intent),
+  "grammarNote": string (concise tip on any error or why their phrasing works)
+}`
+
+  try {
+    const response = await withTransientRetry(() =>
+      client.models.generateContent({
+        model,
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+          temperature: 0.25
+        }
+      })
+    )
+
+    const parsed = parseJsonResponse(response.text)
+    return EvaluateRecallResponseSchema.parse(parsed)
+  } catch (error) {
+    throw formatGeminiError(error, language)
+  }
+}
+
+export async function generateCustomDrills(
+  topErrors: PhonemeError[],
+  count: number
+): Promise<
+  Array<{
+    sentence: string
+    ipa: string
+    category: string
+    promptPt: string
+    contrastHint: string
+    activityType: 'pronunciation' | 'minimal_pair'
+  }>
+> {
+  const { client, model, language } = getAiClient()
+  const errorContext =
+    topErrors.length > 0
+      ? topErrors
+          .slice(0, 5)
+          .map(
+            (e) =>
+              `- Word "${e.word}" (expected ${e.expectedSound}, issue: ${e.userIssue}, ${e.occurrences}x)`
+          )
+          .join('\n')
+      : '- Common Brazilian Portuguese L1 targets: /θ/, /ð/, voiceless -ed /t/, vowel contrast /iː/ vs /ɪ/, initial /h/ vs /r/'
+
+  const prompt = `Create ${count} fresh, practical English practice sentences for a Brazilian Portuguese (PT-BR) learner, specifically targeting these phoneme hotspots:
+${errorContext}
+
+Write "promptPt" (natural Brazilian Portuguese translation) and "contrastHint" (short PT-BR coaching hint) in Brazilian Portuguese.
+Write "sentence", "ipa" (General US IPA), and "category" (concise label, e.g. "AI Drill • /θ/ & -ed") cleanly.
+
+Return ONLY valid JSON:
+{
+  "drills": [
+    {
+      "sentence": string (8-16 words, natural spoken English),
+      "ipa": string,
+      "category": string,
+      "promptPt": string,
+      "contrastHint": string,
+      "activityType": "pronunciation" | "minimal_pair"
+    }
+  ]
+}`
+
+  try {
+    const response = await withTransientRetry(() =>
+      client.models.generateContent({
+        model,
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+          temperature: 0.7
+        }
+      })
+    )
+
+    const parsed = parseJsonResponse(response.text)
+    return GeneratedDrillsPayloadSchema.parse(parsed).drills
   } catch (error) {
     throw formatGeminiError(error, language)
   }

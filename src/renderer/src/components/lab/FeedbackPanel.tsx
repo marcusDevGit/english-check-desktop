@@ -2,7 +2,8 @@ import { ArrowRight, Sparkles } from 'lucide-react'
 import type {
   Accent,
   AnalyzePronunciationResponse,
-  AppLanguage
+  AppLanguage,
+  EvaluateRecallResponse
 } from '../../../../shared/ipc-contracts'
 import { getTranslations } from '../../i18n/translations'
 
@@ -11,7 +12,9 @@ interface FeedbackPanelProps {
   accent: Accent
   category: string | undefined
   sentenceWords: string[]
+  isSentenceHidden: boolean
   analysisResult: AnalyzePronunciationResponse | null
+  recallResult: EvaluateRecallResponse | null
   onNextExercise: () => void
 }
 
@@ -20,11 +23,13 @@ export function FeedbackPanel({
   accent,
   category,
   sentenceWords,
+  isSentenceHidden,
   analysisResult,
+  recallResult,
   onNextExercise
 }: FeedbackPanelProps) {
   const t = getTranslations(language).lab
-  const scoreValue = analysisResult?.overallScore ?? null
+  const scoreValue = analysisResult?.overallScore ?? recallResult?.score ?? null
   const strokeDashoffset =
     scoreValue !== null ? 251.2 - (251.2 * scoreValue) / 100 : 251.2
 
@@ -63,7 +68,12 @@ export function FeedbackPanel({
                 <span className="text-xs font-normal">%</span>
               </span>
               <span className="max-w-[66px] truncate text-[8px] font-medium tracking-wider text-on-surface-variant uppercase">
-                {analysisResult?.fluencyNote ?? t.ready}
+                {analysisResult?.fluencyNote ??
+                  (recallResult
+                    ? recallResult.isMeaningAccurate
+                      ? t.recallAccurate
+                      : t.recallNeedsWork
+                    : t.ready)}
               </span>
             </div>
           </div>
@@ -74,46 +84,73 @@ export function FeedbackPanel({
         </div>
       </div>
 
-      {/* Column 2: Word-by-Word */}
+      {/* Column 2: Word-by-Word OR Active Recall Phrasing */}
       <div className="flex flex-col justify-between gap-2 rounded-xl border border-surface-container-high bg-surface-container-low p-3 shadow-lg lg:col-span-5">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold text-on-surface">{t.wordBreakdown}</span>
+          <span className="text-xs font-semibold text-on-surface">
+            {recallResult ? t.recallTitle : t.wordBreakdown}
+          </span>
           <span className="text-[10px] text-outline">
-            {analysisResult ? t.geminiEval : t.previewTokens}
+            {analysisResult || recallResult ? t.geminiEval : t.previewTokens}
           </span>
         </div>
 
-        <div className="flex flex-wrap content-start items-center gap-1.5 py-0.5">
-          {analysisResult
-            ? analysisResult.words.map((item, idx) => {
-                const style =
-                  item.status === 'accurate'
-                    ? 'bg-surface-container text-secondary'
-                    : item.status === 'stress_issue'
-                      ? 'bg-tertiary-container/20 text-tertiary'
-                      : 'bg-error-container/25 text-error'
-                return (
-                  <div
-                    key={`${item.word}-${idx}`}
-                    title={item.note ?? item.ipaExpected}
-                    className={`flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium shadow-sm ${style}`}
-                  >
-                    <span className="text-on-surface">{item.word}</span>
-                    <span className="font-mono text-[10px] font-semibold">
-                      {item.score}%
+        {recallResult ? (
+          <div className="flex flex-col gap-1.5 py-0.5 text-xs">
+            <p className="text-[11px] leading-relaxed text-on-surface-variant">
+              {recallResult.feedback}
+            </p>
+            <div className="rounded-lg bg-surface-container-lowest p-2">
+              <span className="block font-mono text-[9px] text-secondary uppercase">
+                {t.recallBetterLabel}
+              </span>
+              <span className="text-xs font-medium text-on-surface">
+                {recallResult.betterPhrasing}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-wrap content-start items-center gap-1.5 py-0.5">
+            {analysisResult
+              ? analysisResult.words.map((item, idx) => {
+                  const style =
+                    item.status === 'accurate'
+                      ? 'bg-surface-container text-secondary'
+                      : item.status === 'stress_issue'
+                        ? 'bg-tertiary-container/20 text-tertiary'
+                        : 'bg-error-container/25 text-error'
+                  return (
+                    <div
+                      key={`${item.word}-${idx}`}
+                      title={item.note ?? item.ipaExpected}
+                      className={`flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium shadow-sm ${style}`}
+                    >
+                      <span className="text-on-surface">{item.word}</span>
+                      <span className="font-mono text-[10px] font-semibold">
+                        {item.score}%
+                      </span>
+                    </div>
+                  )
+                })
+              : isSentenceHidden
+                ? sentenceWords.map((_, idx) => (
+                    <span
+                      key={idx}
+                      className="rounded-md bg-surface-container px-2.5 py-1 font-mono text-[11px] text-outline"
+                    >
+                      •••
                     </span>
-                  </div>
-                )
-              })
-            : sentenceWords.map((word, idx) => (
-                <span
-                  key={`${word}-${idx}`}
-                  className="rounded-md bg-surface-container px-2 py-1 text-[11px] font-medium text-on-surface-variant"
-                >
-                  {word}
-                </span>
-              ))}
-        </div>
+                  ))
+                : sentenceWords.map((word, idx) => (
+                    <span
+                      key={`${word}-${idx}`}
+                      className="rounded-md bg-surface-container px-2 py-1 text-[11px] font-medium text-on-surface-variant"
+                    >
+                      {word}
+                    </span>
+                  ))}
+          </div>
+        )}
 
         <div className="flex items-center gap-3 border-t border-surface-container-high/50 pt-1 text-[10px] text-outline">
           <span className="flex items-center gap-1">
@@ -142,6 +179,7 @@ export function FeedbackPanel({
 
         <div className="rounded-lg bg-surface-container-lowest p-2.5 text-[11px] leading-relaxed text-on-surface-variant">
           {analysisResult?.articulatoryTip ??
+            recallResult?.grammarNote ??
             `${t.defaultTipPrefix} "${category ?? 'phonetics'}": ${t.defaultTipSuffix}`}
         </div>
 

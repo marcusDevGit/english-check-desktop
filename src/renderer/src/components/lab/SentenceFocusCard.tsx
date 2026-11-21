@@ -1,4 +1,4 @@
-import { Mic, Play, RotateCcw, Sparkles, Square, Volume2 } from 'lucide-react'
+import { Eye, EyeOff, Mic, Play, RotateCcw, Send, Sparkles, Square, Volume2 } from 'lucide-react'
 import type { Accent, AppLanguage, PracticeItem } from '../../../../shared/ipc-contracts'
 import { getTranslations } from '../../i18n/translations'
 import { WaveformCanvas } from '../audio/WaveformCanvas'
@@ -12,6 +12,12 @@ interface SentenceFocusCardProps {
   isSpeaking: boolean
   onToggleSpeak: () => void
   activeVoiceLabel: string | null
+  isSentenceHidden: boolean
+  onToggleHideSentence: () => void
+  recallAnswer: string
+  onChangeRecallAnswer: (value: string) => void
+  isEvaluatingRecall: boolean
+  onEvaluateRecall: () => void
   isRecording: boolean
   isPlayingRecording: boolean
   liveSamples: number[]
@@ -41,6 +47,12 @@ export function SentenceFocusCard({
   isSpeaking,
   onToggleSpeak,
   activeVoiceLabel,
+  isSentenceHidden,
+  onToggleHideSentence,
+  recallAnswer,
+  onChangeRecallAnswer,
+  isEvaluatingRecall,
+  onEvaluateRecall,
   isRecording,
   isPlayingRecording,
   liveSamples,
@@ -54,7 +66,10 @@ export function SentenceFocusCard({
   onRetry,
   onAnalyze
 }: SentenceFocusCardProps) {
-  const t = getTranslations(language).lab
+  const translations = getTranslations(language)
+  const t = translations.lab
+  const tTracks = translations.tracks
+  const isActiveRecall = item?.activityType === 'active_recall'
 
   return (
     <section className="relative z-10 flex w-full flex-col gap-2.5 overflow-hidden rounded-2xl border border-surface-container-high bg-surface-container-low p-3.5 shadow-xl">
@@ -69,6 +84,11 @@ export function SentenceFocusCard({
           <span className="font-mono text-[10px] font-semibold tracking-wider text-primary uppercase">
             Drill #{item?.id ?? '—'}
           </span>
+          {item && (
+            <span className="rounded bg-primary/15 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-primary">
+              {tTracks.activityTypes[item.activityType]}
+            </span>
+          )}
           <span className="text-outline">•</span>
           <span className="font-medium tracking-wide text-on-surface-variant">
             {item?.category ?? '...'}
@@ -76,6 +96,16 @@ export function SentenceFocusCard({
         </div>
 
         <div className="flex items-center gap-2 font-mono text-[10px] text-outline">
+          {item && (
+            <button
+              type="button"
+              onClick={onToggleHideSentence}
+              className="flex items-center gap-1 rounded bg-surface-container px-2 py-0.5 text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
+            >
+              {isSentenceHidden ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
+              <span>{isSentenceHidden ? t.revealText : t.hideText}</span>
+            </button>
+          )}
           <span className="rounded bg-surface-container px-2 py-0.5">
             {t.attempts}: {item?.attemptsCount ?? 0}
           </span>
@@ -88,15 +118,73 @@ export function SentenceFocusCard({
         </div>
       </div>
 
-      {/* Sentence & IPA */}
+      {/* Sentence / Active Recall / Shadowing */}
       <div className="flex flex-col gap-1.5">
-        <h1 className="text-lg leading-snug font-semibold tracking-tight text-on-surface lg:text-xl">
-          {item ? `“${item.sentence}”` : t.loadingDrills}
-        </h1>
+        {isSentenceHidden && item ? (
+          isActiveRecall && item.promptPt ? (
+            <div className="flex flex-col gap-2 rounded-xl border border-primary/25 bg-surface-container-lowest/90 p-3">
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-mono text-[10px] font-semibold text-primary uppercase">
+                  {t.recallTitle}
+                </span>
+                {item.contrastHint && (
+                  <span className="font-mono text-[10px] text-tertiary">
+                    {item.contrastHint}
+                  </span>
+                )}
+              </div>
+              <p className="text-base leading-snug font-semibold text-on-surface">
+                “{item.promptPt}”
+              </p>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={recallAnswer}
+                  onChange={(e) => onChangeRecallAnswer(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      onEvaluateRecall()
+                    }
+                  }}
+                  placeholder={t.recallPlaceholder}
+                  className="min-w-0 flex-1 rounded-lg border border-surface-container-high bg-surface-container px-3 py-1.5 text-xs text-on-surface placeholder:text-outline/60 focus:border-primary focus:outline-none"
+                />
+                <button
+                  type="button"
+                  disabled={!recallAnswer.trim() || isEvaluatingRecall}
+                  onClick={onEvaluateRecall}
+                  className="flex shrink-0 items-center gap-1.5 rounded-lg bg-primary-container px-3 py-1.5 text-[11px] font-semibold text-on-primary-container transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <Send className="h-3 w-3" />
+                  <span>{isEvaluatingRecall ? t.evaluatingRecall : t.evaluateRecall}</span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-dashed border-primary/35 bg-surface-container-lowest/80 px-3 py-2.5">
+              <span className="text-xs text-on-surface-variant">{t.shadowingHiddenHint}</span>
+              <button
+                type="button"
+                onClick={onToggleHideSentence}
+                className="flex shrink-0 items-center gap-1 rounded-lg bg-surface-container px-2.5 py-1 text-[11px] font-medium text-primary hover:bg-surface-container-high"
+              >
+                <Eye className="h-3.5 w-3.5" />
+                <span>{t.revealText}</span>
+              </button>
+            </div>
+          )
+        ) : (
+          <h1 className="text-lg leading-snug font-semibold tracking-tight text-on-surface lg:text-xl">
+            {item ? `“${item.sentence}”` : t.loadingDrills}
+          </h1>
+        )}
 
         <div className="flex flex-wrap items-center gap-2 rounded-xl bg-surface-container-lowest/80 px-2.5 py-1.5 font-mono text-xs text-on-surface-variant shadow-inner">
           <span className="text-[11px] text-outline select-none">IPA:</span>
-          <span className="text-primary/95">{item?.ipa ?? '/.../'}</span>
+          <span className="text-primary/95">
+            {isSentenceHidden ? '••••••••••' : (item?.ipa ?? '/.../')}
+          </span>
 
           <div className="ml-auto flex items-center gap-1.5">
             <button
@@ -131,6 +219,27 @@ export function SentenceFocusCard({
             </div>
           </div>
         </div>
+
+        {!isSentenceHidden && (item?.promptPt || item?.contrastHint) && (
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-1 text-[11px] text-on-surface-variant">
+            {item.promptPt && (
+              <span>
+                <span className="font-mono text-[10px] text-outline">
+                  {tTracks.contextPtLabel}{' '}
+                </span>
+                {item.promptPt}
+              </span>
+            )}
+            {item.contrastHint && (
+              <span className="text-tertiary/90">
+                <span className="font-mono text-[10px] text-outline">
+                  {tTracks.contrastLabel}{' '}
+                </span>
+                {item.contrastHint}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Waveform Stage */}

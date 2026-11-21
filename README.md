@@ -1,11 +1,14 @@
-# English Checks Desktop (`v0.1.0`)
+# English Checks Desktop (`v0.2.0`)
 
-Estúdio pessoal desktop (Windows) para treino de **pronúncia** e **escrita em inglês**, com avaliação por IA focada em interferências comuns de falantes de **Português Brasileiro (`pt-BR`)** e persistência local offline-first em SQLite.
+Estúdio pessoal desktop (Windows) para treino de **pronúncia**, **escrita** e **trilhas guiadas em inglês**, com avaliação por IA focada em interferências comuns de falantes de **Português Brasileiro (`pt-BR`)** e persistência local offline-first em SQLite.
 
 ---
 
-## Recursos do MVP (`v0.1.0`)
+## Recursos (`v0.2.0`)
 
+- **Trilhas de Aprendizado (*Learning Tracks*) & 24 Atividades:**
+  - 3 trilhas guiadas por nível CEFR (*Fonética Crítica PT-BR*, *Inglês Técnico & Reuniões de Dev*, *Conversação & Situações Reais*) com barra de progresso real em SQLite.
+  - 4 modos de exercício: **Pronúncia**, **Pares Mínimos**, **Shadowing** (ouvir com texto oculto) e **Active Recall (`PT-BR → EN`)** com avaliação de sentido pelo Gemini.
 - **Laboratório de Pronúncia:**
   - Seleção de microfone / interface de áudio USB (`navigator.mediaDevices.enumerateDevices()`).
   - Captura via Web Audio API / `MediaRecorder` (sem `Web Speech API`) com waveform em tempo real no `<canvas>`.
@@ -15,8 +18,9 @@ Estúdio pessoal desktop (Windows) para treino de **pronúncia** e **escrita em 
 - **Revisão de Escrita (*Writing Check*):**
   - Avaliação por contexto (*Trabalho / Tech*, *E-mail*, *Conversa*, *Acadêmico*).
   - Nota de naturalidade, versão corrigida, alternativas mais naturais e explicações de gramática/calques do português (`Ctrl+Enter`).
-- **Deck de Revisão & Progresso:**
-  - Banco SQLite local (`better-sqlite3` + Drizzle ORM) com seed inicial de 10 frases e registro automático de erros recorrentes (`phoneme_errors`) e sessões (`study_sessions`).
+- **Deck de Revisão com IA & Progresso:**
+  - Banco SQLite local (`better-sqlite3` + Drizzle ORM) com registro automático de erros recorrentes (`phoneme_errors`) e sessões (`study_sessions`).
+  - **Gerador de treinos com IA:** cria novas frases inéditas focadas nos seus principais erros em `phoneme_errors` com destaque visual (`Novo • IA` / `IA Personalizado`) e filtro rápido.
 - **Quick Check Overlay (`Ctrl+Shift+E`):**
   - Janela flutuante compacta (`560x340`, `alwaysOnTop`) para checagem rápida de pronúncia ou gramática de qualquer lugar do Windows (`Esc` oculta preservando o estado).
 - **Bilíngue (`PT-BR` / `EN`) & Credenciais Seguras:**
@@ -74,6 +78,5 @@ npm run dev
 
 ## Roadmap Planejado
 
-- **`v0.2.0` — Trilhas & Novas Atividades:** trilhas guiadas de aprendizado (*Learning Tracks*), treino de pares mínimos (*Minimal Pairs*), *Active Recall* (`PT-BR → EN`), *Listening/Shadowing* e geração de exercícios sob demanda a partir de `phoneme_errors`.
-- **`v0.3.0` — Produtividade Desktop:** Pomodoro centralizado no Main Process, integração com Windows System Tray e notificações nativas.
+- **`v0.3.0` — Produtividade Desktop:** Pomodoro centralizado no Main Process, integração com Windows System Tray, minimização para bandeja e notificações nativas.
 - **`v1.0.0` — Release Empacotada:** testes automatizados e instalador Windows NSIS (`.exe`) via `electron-builder` com migrations SQL via `extraResources`.
