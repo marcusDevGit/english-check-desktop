@@ -17,8 +17,12 @@ export interface Translations {
   titleBar: {
     days: string
     focus: string
+    breakLabel: string
     settingsTitle: string
     pomodoroTooltip: string
+    pomodoroStart: string
+    pomodoroPause: string
+    pomodoroReset: string
     minimize: string
     maximize: string
     restore: string
@@ -234,12 +238,16 @@ const PT_BR: Translations = {
   titleBar: {
     days: 'dias',
     focus: 'Foco',
+    breakLabel: 'Pausa',
     settingsTitle: 'Configurações do Estúdio',
-    pomodoroTooltip: 'Sincronia Pomodoro na bandeja prevista para v0.2.0',
+    pomodoroTooltip: 'Pomodoro sincronizado com a bandeja do Windows e histórico',
+    pomodoroStart: 'Iniciar Pomodoro',
+    pomodoroPause: 'Pausar Pomodoro',
+    pomodoroReset: 'Resetar Pomodoro',
     minimize: 'Minimizar janela',
     maximize: 'Maximizar janela',
     restore: 'Restaurar janela',
-    close: 'Fechar janela'
+    close: 'Ocultar para bandeja do sistema'
   },
   settings: {
     title: 'Configurações do Estúdio',
@@ -461,12 +469,16 @@ const EN: Translations = {
   titleBar: {
     days: 'days',
     focus: 'Focus',
+    breakLabel: 'Break',
     settingsTitle: 'Studio Settings',
-    pomodoroTooltip: 'Pomodoro System Tray sync planned for v0.2.0',
+    pomodoroTooltip: 'Pomodoro timer synced with Windows System Tray & history',
+    pomodoroStart: 'Start Pomodoro',
+    pomodoroPause: 'Pause Pomodoro',
+    pomodoroReset: 'Reset Pomodoro',
     minimize: 'Minimize window',
     maximize: 'Maximize window',
     restore: 'Restore window',
-    close: 'Close window'
+    close: 'Hide to System Tray'
   },
   settings: {
     title: 'Studio Settings',

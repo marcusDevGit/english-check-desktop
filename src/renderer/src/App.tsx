@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
-import type { AppLanguage } from '../../shared/ipc-contracts'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import type { AppLanguage, PomodoroState } from '../../shared/ipc-contracts'
 import { SidebarRail, type StudioView } from './components/layout/SidebarRail'
 import { TitleBar } from './components/layout/TitleBar'
 import { SettingsModal } from './components/settings/SettingsModal'
@@ -10,6 +10,13 @@ import { ReviewDeckView } from './views/ReviewDeckView'
 import { TracksView } from './views/TracksView'
 import { WritingCheckView } from './views/WritingCheckView'
 
+const DEFAULT_POMODORO_STATE: PomodoroState = {
+  mode: 'focus',
+  status: 'idle',
+  remainingSeconds: 25 * 60,
+  totalSeconds: 25 * 60
+}
+
 export default function App() {
   const [isQuickCheckRoute] = useState(
     () => window.location.hash === '#/quick-check'
@@ -17,9 +24,13 @@ export default function App() {
   const [language, setLanguage] = useState<AppLanguage>('pt-BR')
   const [activeView, setActiveView] = useState<StudioView>('pronunciation-lab')
   const [streakDays, setStreakDays] = useState<number>(0)
+  const [pomodoroState, setPomodoroState] = useState<PomodoroState>(
+    DEFAULT_POMODORO_STATE
+  )
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [selectedTrackId, setSelectedTrackId] = useState<number | null>(null)
   const [selectedLabItemId, setSelectedLabItemId] = useState<number | null>(null)
+  const prevPomodoroRef = useRef<PomodoroState>(DEFAULT_POMODORO_STATE)
 
   useEffect(() => {
     let active = true
@@ -64,6 +75,69 @@ export default function App() {
     refreshStreak()
   }, [refreshStreak])
 
+  useEffect(() => {
+    if (isQuickCheckRoute) return
+    let active = true
+
+    window.englishChecks
+      .getPomodoroState()
+      .then((res) => {
+        if (active && res.ok) {
+          prevPomodoroRef.current = res.data
+          setPomodoroState(res.data)
+        }
+      })
+      .catch(() => {
+        // Keep default idle state
+      })
+
+    const unsubscribePomodoro = window.englishChecks.onPomodoroTick((nextState) => {
+      if (!active) return
+      const prev = prevPomodoroRef.current
+      if (
+        prev.mode === 'focus' &&
+        prev.status === 'running' &&
+        nextState.mode === 'break'
+      ) {
+        refreshStreak()
+      }
+      prevPomodoroRef.current = nextState
+      setPomodoroState(nextState)
+    })
+
+    return () => {
+      active = false
+      unsubscribePomodoro()
+    }
+  }, [isQuickCheckRoute, refreshStreak])
+
+  const handleStartPomodoro = (): void => {
+    void window.englishChecks.startPomodoro().then((res) => {
+      if (res.ok) {
+        prevPomodoroRef.current = res.data
+        setPomodoroState(res.data)
+      }
+    })
+  }
+
+  const handlePausePomodoro = (): void => {
+    void window.englishChecks.pausePomodoro().then((res) => {
+      if (res.ok) {
+        prevPomodoroRef.current = res.data
+        setPomodoroState(res.data)
+      }
+    })
+  }
+
+  const handleResetPomodoro = (): void => {
+    void window.englishChecks.resetPomodoro().then((res) => {
+      if (res.ok) {
+        prevPomodoroRef.current = res.data
+        setPomodoroState(res.data)
+      }
+    })
+  }
+
   if (isQuickCheckRoute) {
     return <QuickCheckOverlayView language={language} />
   }
@@ -85,6 +159,10 @@ export default function App() {
       <TitleBar
         streakDays={streakDays}
         language={language}
+        pomodoro={pomodoroState}
+        onStartPomodoro={handleStartPomodoro}
+        onPausePomodoro={handlePausePomodoro}
+        onResetPomodoro={handleResetPomodoro}
         onOpenSettings={() => setIsSettingsOpen(true)}
       />
       <SidebarRail

@@ -1,11 +1,15 @@
-# English Checks Desktop (`v0.2.0`)
+# English Checks Desktop (`v0.3.0`)
 
-Estúdio pessoal desktop (Windows) para treino de **pronúncia**, **escrita** e **trilhas guiadas em inglês**, com avaliação por IA focada em interferências comuns de falantes de **Português Brasileiro (`pt-BR`)** e persistência local offline-first em SQLite.
+Estúdio pessoal desktop (Windows) para treino de **pronúncia**, **escrita** e **trilhas guiadas em inglês**, com avaliação por IA focada em interferências comuns de falantes de **Português Brasileiro (`pt-BR`)**, Pomodoro integrado à bandeja do Windows e persistência local offline-first em SQLite.
 
 ---
 
-## Recursos (`v0.2.0`)
+## Recursos (`v0.3.0`)
 
+- **Pomodoro no Main Process & Windows System Tray:**
+  - Timer centralizado no Main Process (`25 min` foco / `5 min` pausa) sincronizado em tempo real com a barra superior (`TitleBar`) via `pomodoro:tick`.
+  - Ícone na bandeja do sistema (*System Tray*) com tooltip ao vivo e menu de contexto (`Abrir English Checks`, `Quick Check`, `Iniciar/Pausar Pomodoro`, `Resetar Pomodoro`, `Sair`).
+  - Fechar a janela principal oculta o app para a bandeja mantendo `Ctrl+Shift+E` ativo em segundo plano; blocos de foco concluídos são salvos em `study_sessions` e disparam `Notification` nativa do Windows.
 - **Trilhas de Aprendizado (*Learning Tracks*) & 24 Atividades:**
   - 3 trilhas guiadas por nível CEFR (*Fonética Crítica PT-BR*, *Inglês Técnico & Reuniões de Dev*, *Conversação & Situações Reais*) com barra de progresso real em SQLite.
   - 4 modos de exercício: **Pronúncia**, **Pares Mínimos**, **Shadowing** (ouvir com texto oculto) e **Active Recall (`PT-BR → EN`)** com avaliação de sentido pelo Gemini.
@@ -33,7 +37,7 @@ Estúdio pessoal desktop (Windows) para treino de **pronúncia**, **escrita** e 
 
 ```text
 src/
-├── main/        # Main Process (Electron, SQLite/Drizzle, @google/genai, safeStorage, atalho global)
+├── main/        # Main Process (Electron, SQLite/Drizzle, @google/genai, safeStorage, Pomodoro, Tray, atalho global)
 ├── preload/     # Ponte segura (contextBridge -> window.englishChecks) com sandbox: true
 ├── renderer/    # Interface React 19 + TypeScript + Tailwind CSS v4 + Lucide Icons
 └── shared/      # Canais IPC e contratos Zod (Single Source of Truth)
@@ -78,5 +82,5 @@ npm run dev
 
 ## Roadmap Planejado
 
-- **`v0.3.0` — Produtividade Desktop:** Pomodoro centralizado no Main Process, integração com Windows System Tray, minimização para bandeja e notificações nativas.
-- **`v1.0.0` — Release Empacotada:** testes automatizados e instalador Windows NSIS (`.exe`) via `electron-builder` com migrations SQL via `extraResources`.
+- **`v0.4.0` — Rich Curriculum Engine & Roleplay Studio:** pipeline *build-time* (`scripts/generate-tracks.ts`) com fontes abertas + Gemini gerando currículo offline em 3 níveis (*Pre-Lesson Cheat Sheet*, `starterChips`, lições em 5 etapas com Roleplay multi-turno) e criação de trilha a partir de texto/podcast do usuário.
+- **`v1.0.0` — Release Empacotada:** testes automatizados, instalador Windows NSIS (`.exe`) via `electron-builder` com migrations SQL via `extraResources` e evoluções futuras do Pomodoro (tempos configuráveis, pausa longa e meta diária).
