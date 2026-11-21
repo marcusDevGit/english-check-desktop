@@ -4,6 +4,8 @@ import type {
   Accent,
   AnalyzePronunciationResponse,
   AppLanguage,
+  EvaluateRecallResponse,
+  LearningTrackProgress,
   PracticeItem
 } from '../../../shared/ipc-contracts'
 import { FeedbackPanel } from '../components/lab/FeedbackPanel'
@@ -26,25 +28,34 @@ function isEditableTarget(target: EventTarget | null): boolean {
 
 interface PronunciationLabViewProps {
   language: AppLanguage
+  selectedTrackId?: number | null
+  onSelectTrackId?: (trackId: number | null) => void
   selectedPracticeItemId?: number | null
   onSessionRecorded?: () => void
 }
 
 export function PronunciationLabView({
   language,
+  selectedTrackId = null,
+  onSelectTrackId,
   selectedPracticeItemId,
   onSessionRecorded
 }: PronunciationLabViewProps) {
   const t = getTranslations(language).lab
 
+  const [tracks, setTracks] = useState<LearningTrackProgress[]>([])
   const [items, setItems] = useState<PracticeItem[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [currentIndex, setCurrentIndex] = useState<number>(0)
   const [accent, setAccent] = useState<Accent>('US')
   const [playbackRate, setPlaybackRate] = useState<1.0 | 0.8>(1.0)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [isEvaluatingRecall, setIsEvaluatingRecall] = useState(false)
   const [analysisResult, setAnalysisResult] =
     useState<AnalyzePronunciationResponse | null>(null)
+  const [recallResult, setRecallResult] = useState<EvaluateRecallResponse | null>(null)
+  const [recallAnswer, setRecallAnswer] = useState('')
+  const [isSentenceHidden, setIsSentenceHidden] = useState(false)
   const [analysisNotice, setAnalysisNotice] = useState<string | null>(null)
 
   const recorder = useAudioRecorder(language)
@@ -53,9 +64,15 @@ export function PronunciationLabView({
 
   const loadPracticeItems = useCallback(async () => {
     try {
-      const res = await window.englishChecks.getPracticeItems()
-      if (res.ok) {
-        setItems(res.data)
+      const [itemsRes, tracksRes] = await Promise.all([
+        window.englishChecks.getPracticeItems(),
+        window.englishChecks.getTracks()
+      ])
+      if (itemsRes.ok) {
+        setItems(itemsRes.data)
+      }
+      if (tracksRes.ok) {
+        setTracks(tracksRes.data)
       }
     } catch {
       // Keep empty state gracefully if IPC fails
@@ -66,30 +83,48 @@ export function PronunciationLabView({
     void loadPracticeItems()
   }, [loadPracticeItems])
 
+  const trackScopedItems = useMemo(() => {
+    if (!selectedTrackId) return items
+    return items.filter((item) => item.trackId === selectedTrackId)
+  }, [items, selectedTrackId])
+
+  const categories = useMemo(() => {
+    const unique = Array.from(new Set(trackScopedItems.map((item) => item.category)))
+    return ['All', ...unique]
+  }, [trackScopedItems])
+
+  const filteredItems = useMemo(() => {
+    if (selectedCategory === 'All') return trackScopedItems
+    return trackScopedItems.filter((item) => item.category === selectedCategory)
+  }, [selectedCategory, trackScopedItems])
+
   useEffect(() => {
-    if (!selectedPracticeItemId || items.length === 0) return
+    if (!selectedPracticeItemId || filteredItems.length === 0) return
     setSelectedCategory('All')
-    const idx = items.findIndex((item) => item.id === selectedPracticeItemId)
+    const idx = trackScopedItems.findIndex((item) => item.id === selectedPracticeItemId)
     if (idx >= 0) {
       setCurrentIndex(idx)
     }
-  }, [items, selectedPracticeItemId])
-
-  const categories = useMemo(() => {
-    const unique = Array.from(new Set(items.map((item) => item.category)))
-    return ['All', ...unique]
-  }, [items])
-
-  const filteredItems = useMemo(() => {
-    if (selectedCategory === 'All') return items
-    return items.filter((item) => item.category === selectedCategory)
-  }, [items, selectedCategory])
+  }, [filteredItems.length, selectedPracticeItemId, trackScopedItems])
 
   const currentItem = filteredItems[currentIndex] ?? filteredItems[0] ?? null
+
+  useEffect(() => {
+    if (!currentItem) return
+    const shouldHideByDefault =
+      currentItem.activityType === 'shadowing' ||
+      currentItem.activityType === 'active_recall'
+    setIsSentenceHidden(shouldHideByDefault)
+    setRecallAnswer('')
+    setRecallResult(null)
+    setAnalysisResult(null)
+    setAnalysisNotice(null)
+  }, [currentItem?.id])
 
   const resetCurrentAttempt = useCallback(() => {
     clearRecording()
     setAnalysisResult(null)
+    setRecallResult(null)
     setAnalysisNotice(null)
   }, [clearRecording])
 
@@ -110,6 +145,7 @@ export function PronunciationLabView({
     if (!currentItem || !recorder.audioBytes || !recorder.mimeType) return
     setIsAnalyzing(true)
     setAnalysisNotice(null)
+    setRecallResult(null)
 
     const result = await window.englishChecks.analyzePronunciation({
       audio: recorder.audioBytes,
@@ -123,6 +159,7 @@ export function PronunciationLabView({
     setIsAnalyzing(false)
     if (result.ok) {
       setAnalysisResult(result.data)
+      setIsSentenceHidden(false)
       void loadPracticeItems()
       onSessionRecorded?.()
     } else {
@@ -137,6 +174,32 @@ export function PronunciationLabView({
     recorder.durationMs,
     recorder.mimeType
   ])
+
+  const handleEvaluateRecall = useCallback(async () => {
+    if (!currentItem || !currentItem.promptPt || !recallAnswer.trim() || isEvaluatingRecall) {
+      return
+    }
+    setIsEvaluatingRecall(true)
+    setAnalysisNotice(null)
+    setAnalysisResult(null)
+
+    const result = await window.englishChecks.evaluateRecall({
+      promptPt: currentItem.promptPt,
+      expectedEnglish: currentItem.sentence,
+      userAnswer: recallAnswer.trim(),
+      practiceItemId: currentItem.id
+    })
+
+    setIsEvaluatingRecall(false)
+    if (result.ok) {
+      setRecallResult(result.data)
+      setIsSentenceHidden(false)
+      void loadPracticeItems()
+      onSessionRecorded?.()
+    } else {
+      setAnalysisNotice(result.error)
+    }
+  }, [currentItem, isEvaluatingRecall, loadPracticeItems, onSessionRecorded, recallAnswer])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent): void => {
@@ -193,6 +256,14 @@ export function PronunciationLabView({
         inputLevel={recorder.inputLevel}
         accent={accent}
         onSelectAccent={setAccent}
+        tracks={tracks}
+        selectedTrackId={selectedTrackId}
+        onSelectTrack={(nextTrackId) => {
+          onSelectTrackId?.(nextTrackId)
+          setSelectedCategory('All')
+          setCurrentIndex(0)
+          resetCurrentAttempt()
+        }}
         categories={categories}
         selectedCategory={selectedCategory}
         onSelectCategory={(category) => {
@@ -243,6 +314,12 @@ export function PronunciationLabView({
           }
         }}
         activeVoiceLabel={tts.activeVoiceLabel}
+        isSentenceHidden={isSentenceHidden}
+        onToggleHideSentence={() => setIsSentenceHidden((prev) => !prev)}
+        recallAnswer={recallAnswer}
+        onChangeRecallAnswer={setRecallAnswer}
+        isEvaluatingRecall={isEvaluatingRecall}
+        onEvaluateRecall={() => void handleEvaluateRecall()}
         isRecording={recorder.isRecording}
         isPlayingRecording={recorder.isPlayingRecording}
         liveSamples={recorder.liveSamples}
@@ -268,7 +345,9 @@ export function PronunciationLabView({
         accent={accent}
         category={currentItem?.category}
         sentenceWords={sentenceWords}
+        isSentenceHidden={isSentenceHidden}
         analysisResult={analysisResult}
+        recallResult={recallResult}
         onNextExercise={goToNextExercise}
       />
 

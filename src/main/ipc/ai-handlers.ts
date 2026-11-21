@@ -1,14 +1,23 @@
 import {
   AnalyzePronunciationRequestSchema,
   CheckGrammarRequestSchema,
+  EvaluateRecallRequestSchema,
+  GenerateDrillsRequestSchema,
   IPC_CHANNELS
 } from '../../shared/ipc-contracts'
 import {
+  getPhonemeErrors,
+  insertCustomPracticeItems,
   saveStudySession,
   updatePracticeReview,
   upsertPhonemeErrors
 } from '../database/repository'
-import { analyzePronunciation, checkWriting } from '../services/ai-evaluator'
+import {
+  analyzePronunciation,
+  checkWriting,
+  evaluateActiveRecall,
+  generateCustomDrills
+} from '../services/ai-evaluator'
 import { registerValidatedHandler } from './safe-handle'
 
 function computeNextReviewIso(score: number): string {
@@ -64,6 +73,41 @@ export function registerAiHandlers(): void {
         score: Math.round(result.naturalnessScore)
       })
       return result
+    }
+  )
+
+  registerValidatedHandler(
+    IPC_CHANNELS.AI_EVALUATE_RECALL,
+    EvaluateRecallRequestSchema,
+    async (input) => {
+      const result = await evaluateActiveRecall(input)
+      const roundedScore = Math.round(result.score)
+
+      saveStudySession({
+        type: 'writing',
+        durationSeconds: 30,
+        score: roundedScore
+      })
+
+      if (input.practiceItemId) {
+        updatePracticeReview({
+          itemId: input.practiceItemId,
+          score: roundedScore,
+          nextReviewAt: computeNextReviewIso(roundedScore)
+        })
+      }
+
+      return result
+    }
+  )
+
+  registerValidatedHandler(
+    IPC_CHANNELS.AI_GENERATE_DRILLS,
+    GenerateDrillsRequestSchema,
+    async (input) => {
+      const topErrors = getPhonemeErrors()
+      const generated = await generateCustomDrills(topErrors, input.count)
+      return insertCustomPracticeItems(generated)
     }
   )
 }

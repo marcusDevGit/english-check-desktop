@@ -1,5 +1,9 @@
 import { Mic, RefreshCw, Shuffle } from 'lucide-react'
-import type { Accent, AppLanguage } from '../../../../shared/ipc-contracts'
+import type {
+  Accent,
+  AppLanguage,
+  LearningTrackProgress
+} from '../../../../shared/ipc-contracts'
 import type { AudioInputDevice } from '../../hooks/useAudioRecorder'
 import { getTranslations } from '../../i18n/translations'
 
@@ -13,6 +17,9 @@ interface LabToolbarProps {
   inputLevel: number
   accent: Accent
   onSelectAccent: (accent: Accent) => void
+  tracks: LearningTrackProgress[]
+  selectedTrackId: number | null
+  onSelectTrack: (trackId: number | null) => void
   categories: string[]
   selectedCategory: string
   onSelectCategory: (category: string) => void
@@ -30,13 +37,18 @@ export function LabToolbar({
   inputLevel,
   accent,
   onSelectAccent,
+  tracks,
+  selectedTrackId,
+  onSelectTrack,
   categories,
   selectedCategory,
   onSelectCategory,
   onShuffle,
   onNext
 }: LabToolbarProps) {
-  const t = getTranslations(language).lab
+  const translations = getTranslations(language)
+  const t = translations.lab
+  const tTracks = translations.tracks
 
   return (
     <section className="relative z-10 flex w-full items-center justify-between gap-2.5 rounded-xl border border-surface-container-high bg-surface-container-low/95 px-2.5 py-1.5 text-xs shadow-md backdrop-blur-md">
@@ -121,7 +133,30 @@ export function LabToolbar({
         </div>
       </div>
 
-      <div className="no-scrollbar flex min-w-0 flex-1 items-center gap-1 overflow-x-auto py-0.5">
+      <div className="no-scrollbar flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto py-0.5">
+        {tracks.length > 0 && (
+          <select
+            aria-label={tTracks.allTracks}
+            value={selectedTrackId ?? ''}
+            onChange={(e) =>
+              onSelectTrack(e.target.value ? Number(e.target.value) : null)
+            }
+            className="max-w-[170px] shrink-0 cursor-pointer rounded-lg border border-surface-container-high bg-surface-container px-2 py-1 text-[11px] font-medium text-primary outline-none"
+          >
+            <option value="" className="bg-surface-container text-on-surface">
+              {tTracks.allTracks}
+            </option>
+            {tracks.map((track) => (
+              <option
+                key={track.id}
+                value={track.id}
+                className="bg-surface-container text-on-surface"
+              >
+                {language === 'pt-BR' ? track.titlePt : track.titleEn}
+              </option>
+            ))}
+          </select>
+        )}
         {categories.map((category) => {
           const active = selectedCategory === category
           const label = category === 'All' ? t.allCategories : category

@@ -1,5 +1,6 @@
 import { asc, desc, eq, sql } from 'drizzle-orm'
 import type {
+  LearningTrackProgress,
   PhonemeError,
   PracticeItem,
   SaveSessionRequest,
@@ -8,7 +9,9 @@ import type {
   UpdatePracticeReviewRequest
 } from '../../shared/ipc-contracts'
 import { getDb } from './index'
-import { phonemeErrors, practiceItems, studySessions } from './schema'
+import { learningTracks, phonemeErrors, practiceItems, studySessions } from './schema'
+
+const MASTERY_THRESHOLD_SCORE = 75
 
 function toDayKey(date: Date): string {
   const year = date.getFullYear()
@@ -77,7 +80,7 @@ export function getStudyStats(): StudyStats {
 
 export function saveStudySession(input: SaveSessionRequest): StudySession {
   const db = getDb()
-  const inserted = db
+  return db
     .insert(studySessions)
     .values({
       type: input.type,
@@ -86,8 +89,45 @@ export function saveStudySession(input: SaveSessionRequest): StudySession {
     })
     .returning()
     .get()
+}
 
-  return inserted
+export function getLearningTracksProgress(): LearningTrackProgress[] {
+  const db = getDb()
+  const tracks = db
+    .select()
+    .from(learningTracks)
+    .orderBy(asc(learningTracks.orderIndex), asc(learningTracks.id))
+    .all()
+
+  const items = db
+    .select()
+    .from(practiceItems)
+    .orderBy(asc(practiceItems.orderIndex), asc(practiceItems.id))
+    .all()
+
+  return tracks.map((track) => {
+    const trackItems = items.filter((item) => item.trackId === track.id)
+    const completedItems = trackItems.filter(
+      (item) => item.lastScore !== null && item.lastScore >= MASTERY_THRESHOLD_SCORE
+    ).length
+    const nextPending = trackItems.find(
+      (item) => item.lastScore === null || item.lastScore < MASTERY_THRESHOLD_SCORE
+    )
+
+    return {
+      id: track.id,
+      slug: track.slug,
+      titlePt: track.titlePt,
+      titleEn: track.titleEn,
+      descriptionPt: track.descriptionPt,
+      descriptionEn: track.descriptionEn,
+      level: track.level,
+      orderIndex: track.orderIndex,
+      totalItems: trackItems.length,
+      completedItems,
+      nextItemId: nextPending?.id ?? trackItems[0]?.id ?? null
+    }
+  })
 }
 
 export function getPracticeItems(): PracticeItem[] {
@@ -95,7 +135,11 @@ export function getPracticeItems(): PracticeItem[] {
   return db
     .select()
     .from(practiceItems)
-    .orderBy(sql`${practiceItems.nextReviewAt} IS NOT NULL`, asc(practiceItems.nextReviewAt), asc(practiceItems.id))
+    .orderBy(
+      asc(practiceItems.trackId),
+      asc(practiceItems.orderIndex),
+      asc(practiceItems.id)
+    )
     .all()
 }
 
@@ -126,6 +170,45 @@ export function getPhonemeErrors(): PhonemeError[] {
     .from(phonemeErrors)
     .orderBy(desc(phonemeErrors.occurrences), desc(phonemeErrors.updatedAt))
     .all()
+}
+
+export function insertCustomPracticeItems(
+  items: Array<{
+    sentence: string
+    ipa: string
+    category: string
+    promptPt: string
+    contrastHint: string
+    activityType: 'pronunciation' | 'minimal_pair'
+  }>
+): PracticeItem[] {
+  if (items.length === 0) return []
+  const db = getDb()
+  const created: PracticeItem[] = []
+
+  for (const item of items) {
+    const inserted = db
+      .insert(practiceItems)
+      .values({
+        trackId: null,
+        activityType: item.activityType,
+        sentence: item.sentence,
+        ipa: item.ipa,
+        category: item.category,
+        promptPt: item.promptPt,
+        contrastHint: item.contrastHint,
+        orderIndex: 99
+      })
+      .onConflictDoNothing()
+      .returning()
+      .get()
+
+    if (inserted) {
+      created.push(inserted)
+    }
+  }
+
+  return created
 }
 
 export function upsertPhonemeErrors(

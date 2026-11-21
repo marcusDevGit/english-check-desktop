@@ -5,8 +5,11 @@
 export const IPC_CHANNELS = {
   AUDIO_ANALYZE_PRONUNCIATION: 'audio:analyze-pronunciation',
   WRITING_CHECK_GRAMMAR: 'writing:check-grammar',
+  AI_EVALUATE_RECALL: 'ai:evaluate-recall',
+  AI_GENERATE_DRILLS: 'ai:generate-drills',
   DB_GET_STATS: 'db:get-stats',
   DB_SAVE_SESSION: 'db:save-session',
+  DB_GET_TRACKS: 'db:get-tracks',
   DB_GET_PRACTICE_ITEMS: 'db:get-practice-items',
   DB_UPDATE_PRACTICE_REVIEW: 'db:update-practice-review',
   DB_GET_PHONEME_ERRORS: 'db:get-phoneme-errors',

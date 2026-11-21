@@ -13,10 +13,18 @@ const englishChecksApi: EnglishChecksApi = {
   checkGrammar: (payload) =>
     ipcRenderer.invoke(IPC_CHANNELS.WRITING_CHECK_GRAMMAR, payload),
 
+  evaluateRecall: (payload) =>
+    ipcRenderer.invoke(IPC_CHANNELS.AI_EVALUATE_RECALL, payload),
+
+  generateCustomDrills: (payload) =>
+    ipcRenderer.invoke(IPC_CHANNELS.AI_GENERATE_DRILLS, payload ?? { count: 3 }),
+
   getStats: () => ipcRenderer.invoke(IPC_CHANNELS.DB_GET_STATS),
 
   saveSession: (payload) =>
     ipcRenderer.invoke(IPC_CHANNELS.DB_SAVE_SESSION, payload),
+
+  getTracks: () => ipcRenderer.invoke(IPC_CHANNELS.DB_GET_TRACKS),
 
   getPracticeItems: () =>
     ipcRenderer.invoke(IPC_CHANNELS.DB_GET_PRACTICE_ITEMS),

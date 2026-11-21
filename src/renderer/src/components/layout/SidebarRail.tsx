@@ -1,9 +1,10 @@
-import { BarChart3, FileEdit, Layers, Mic, User } from 'lucide-react'
+import { BarChart3, Compass, FileEdit, Layers, Mic, User } from 'lucide-react'
 import type { AppLanguage } from '../../../../shared/ipc-contracts'
 import { getTranslations } from '../../i18n/translations'
 
 export type StudioView =
   | 'pronunciation-lab'
+  | 'tracks'
   | 'writing-check'
   | 'review-deck'
   | 'progress-stats'
@@ -23,6 +24,7 @@ export function SidebarRail({ activeView, language, onSelectView }: SidebarRailP
     icon: typeof Mic
   }> = [
     { id: 'pronunciation-lab', label: t.pronunciationLab, icon: Mic },
+    { id: 'tracks', label: t.tracks, icon: Compass },
     { id: 'writing-check', label: t.writingCheck, icon: FileEdit },
     { id: 'review-deck', label: t.reviewDeck, icon: Layers },
     { id: 'progress-stats', label: t.progressStats, icon: BarChart3 }

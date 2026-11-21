@@ -7,6 +7,7 @@ import { ProgressStatsView } from './views/ProgressStatsView'
 import { PronunciationLabView } from './views/PronunciationLabView'
 import { QuickCheckOverlayView } from './views/QuickCheckOverlayView'
 import { ReviewDeckView } from './views/ReviewDeckView'
+import { TracksView } from './views/TracksView'
 import { WritingCheckView } from './views/WritingCheckView'
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
   const [activeView, setActiveView] = useState<StudioView>('pronunciation-lab')
   const [streakDays, setStreakDays] = useState<number>(0)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [selectedTrackId, setSelectedTrackId] = useState<number | null>(null)
   const [selectedLabItemId, setSelectedLabItemId] = useState<number | null>(null)
 
   useEffect(() => {
@@ -67,6 +69,13 @@ export default function App() {
   }
 
   const handlePracticeFromDeck = (itemId: number): void => {
+    setSelectedTrackId(null)
+    setSelectedLabItemId(itemId)
+    setActiveView('pronunciation-lab')
+  }
+
+  const handleOpenTrackItem = (trackId: number, itemId: number | null): void => {
+    setSelectedTrackId(trackId)
     setSelectedLabItemId(itemId)
     setActiveView('pronunciation-lab')
   }
@@ -89,8 +98,17 @@ export default function App() {
           {activeView === 'pronunciation-lab' && (
             <PronunciationLabView
               language={language}
+              selectedTrackId={selectedTrackId}
+              onSelectTrackId={setSelectedTrackId}
               selectedPracticeItemId={selectedLabItemId}
               onSessionRecorded={refreshStreak}
+            />
+          )}
+
+          {activeView === 'tracks' && (
+            <TracksView
+              language={language}
+              onOpenTrackItem={handleOpenTrackItem}
             />
           )}
 

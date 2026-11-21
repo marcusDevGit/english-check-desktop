@@ -30,7 +30,7 @@ export function TitleBar({ streakDays, language, onOpenSettings }: TitleBarProps
           </span>
         </div>
         <span className="rounded bg-surface-container-high px-1.5 py-0.5 font-mono text-[10px] font-medium tracking-wider text-on-surface-variant uppercase">
-          v0.1.0
+          v0.2.0
         </span>
       </div>
 
