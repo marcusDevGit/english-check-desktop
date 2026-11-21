@@ -1,8 +1,13 @@
-import type { AppLanguage, WritingContext } from '../../../shared/ipc-contracts'
+import type {
+  ActivityType,
+  AppLanguage,
+  WritingContext
+} from '../../../shared/ipc-contracts'
 
 export interface Translations {
   nav: {
     pronunciationLab: string
+    tracks: string
     writingCheck: string
     reviewDeck: string
     progressStats: string
@@ -86,6 +91,16 @@ export interface Translations {
     shortcutRecord: string
     shortcutRetry: string
     shortcutShuffle: string
+    hideText: string
+    revealText: string
+    shadowingHiddenHint: string
+    recallTitle: string
+    recallPlaceholder: string
+    evaluateRecall: string
+    evaluatingRecall: string
+    recallBetterLabel: string
+    recallAccurate: string
+    recallNeedsWork: string
   }
   writing: {
     contextLabel: string
@@ -125,6 +140,13 @@ export interface Translations {
     attempts: string
     last: string
     practiceInLab: string
+    generateDrills: string
+    generatingDrills: string
+    drillsGeneratedMsg: string
+    newAiBadge: string
+    aiCustomBadge: string
+    onlyAiFilter: string
+    noAiDrillsHint: string
   }
   stats: {
     title: string
@@ -183,11 +205,26 @@ export interface Translations {
     recordError: string
     playbackError: string
   }
+  tracks: {
+    title: string
+    subtitle: string
+    progressLabel: string
+    completedOf: string
+    continueTrack: string
+    reviewTrack: string
+    practiceNow: string
+    allTracks: string
+    contextPtLabel: string
+    contrastLabel: string
+    mastered: string
+    activityTypes: Record<ActivityType, string>
+  }
 }
 
 const PT_BR: Translations = {
   nav: {
     pronunciationLab: 'Pronúncia',
+    tracks: 'Trilhas',
     writingCheck: 'Escrita',
     reviewDeck: 'Revisão',
     progressStats: 'Progresso',
@@ -270,7 +307,17 @@ const PT_BR: Translations = {
     drillsLoaded: 'SQLite local pronto',
     shortcutRecord: 'Espaço: Gravar',
     shortcutRetry: 'R: Refazer',
-    shortcutShuffle: 'Ctrl+R: Aleatório'
+    shortcutShuffle: 'Ctrl+R: Aleatório',
+    hideText: 'Ocultar frase',
+    revealText: 'Revelar frase',
+    shadowingHiddenHint: 'Modo Shadowing — ouça o áudio nativo primeiro e tente repetir antes de revelar.',
+    recallTitle: 'Active Recall (PT-BR → EN)',
+    recallPlaceholder: 'Escreva esta frase em inglês de memória e pressione Enter...',
+    evaluateRecall: 'Avaliar Resposta',
+    evaluatingRecall: 'Avaliando...',
+    recallBetterLabel: 'Forma mais natural:',
+    recallAccurate: 'Sentido Correto',
+    recallNeedsWork: 'Precisa Ajuste'
   },
   writing: {
     contextLabel: 'Contexto:',
@@ -314,7 +361,14 @@ const PT_BR: Translations = {
     inPrefix: 'Em',
     attempts: 'Tentativas',
     last: 'Última',
-    practiceInLab: 'Treinar agora'
+    practiceInLab: 'Treinar agora',
+    generateDrills: 'Gerar 3 Treinos com IA',
+    generatingDrills: 'Gerando...',
+    drillsGeneratedMsg: 'novos treinos gerados com base nos seus erros!',
+    newAiBadge: 'Novo • IA',
+    aiCustomBadge: 'IA Personalizado',
+    onlyAiFilter: 'Somente IA',
+    noAiDrillsHint: 'Nenhum treino gerado por IA ainda. Clique em "Gerar 3 Treinos com IA" acima.'
   },
   stats: {
     title: 'Progresso e Estatísticas de Estudo',
@@ -372,12 +426,32 @@ const PT_BR: Translations = {
     micAccessError: 'Não foi possível acessar o dispositivo de áudio selecionado.',
     recordError: 'Erro durante a gravação do microfone.',
     playbackError: 'Falha ao reproduzir a gravação.'
+  },
+  tracks: {
+    title: 'Trilhas de Aprendizado',
+    subtitle: 'Sequência guiada por nível e foco fonético/comunicativo',
+    progressLabel: 'Progresso',
+    completedOf: 'dominadas',
+    continueTrack: 'Continuar trilha',
+    reviewTrack: 'Revisar trilha',
+    practiceNow: 'Treinar',
+    allTracks: 'Todas as trilhas',
+    contextPtLabel: 'PT-BR:',
+    contrastLabel: 'Foco:',
+    mastered: 'Dominada (≥75%)',
+    activityTypes: {
+      pronunciation: 'Pronúncia',
+      minimal_pair: 'Par Mínimo',
+      active_recall: 'Active Recall',
+      shadowing: 'Shadowing'
+    }
   }
 }
 
 const EN: Translations = {
   nav: {
     pronunciationLab: 'Pronunciation Lab',
+    tracks: 'Tracks',
     writingCheck: 'Writing Check',
     reviewDeck: 'Review Deck',
     progressStats: 'Progress & Stats',
@@ -460,7 +534,17 @@ const EN: Translations = {
     drillsLoaded: 'SQLite Local Ready',
     shortcutRecord: 'Spacebar: Record',
     shortcutRetry: 'R: Retry',
-    shortcutShuffle: 'Ctrl+R: Shuffle'
+    shortcutShuffle: 'Ctrl+R: Shuffle',
+    hideText: 'Hide text',
+    revealText: 'Reveal text',
+    shadowingHiddenHint: 'Shadowing Mode — listen to native audio first and repeat before revealing.',
+    recallTitle: 'Active Recall (PT-BR → EN)',
+    recallPlaceholder: 'Type this sentence in English from memory and press Enter...',
+    evaluateRecall: 'Check Recall',
+    evaluatingRecall: 'Checking...',
+    recallBetterLabel: 'More natural phrasing:',
+    recallAccurate: 'Meaning Accurate',
+    recallNeedsWork: 'Needs Adjustment'
   },
   writing: {
     contextLabel: 'Context:',
@@ -504,7 +588,14 @@ const EN: Translations = {
     inPrefix: 'In',
     attempts: 'Attempts',
     last: 'Last',
-    practiceInLab: 'Practice in Lab'
+    practiceInLab: 'Practice in Lab',
+    generateDrills: 'Generate 3 AI Drills',
+    generatingDrills: 'Generating...',
+    drillsGeneratedMsg: 'new drills generated from your phoneme hotspots!',
+    newAiBadge: 'New • AI',
+    aiCustomBadge: 'AI Custom',
+    onlyAiFilter: 'AI Only',
+    noAiDrillsHint: 'No AI-generated drills yet. Click "Generate 3 AI Drills" above.'
   },
   stats: {
     title: 'Progress & Study Statistics',
@@ -562,6 +653,25 @@ const EN: Translations = {
     micAccessError: 'Unable to access the selected audio device.',
     recordError: 'Error while recording from microphone.',
     playbackError: 'Failed to play recorded audio.'
+  },
+  tracks: {
+    title: 'Learning Tracks',
+    subtitle: 'Guided curriculum by level, phonetics, and real-life scenarios',
+    progressLabel: 'Progress',
+    completedOf: 'mastered',
+    continueTrack: 'Continue track',
+    reviewTrack: 'Review track',
+    practiceNow: 'Practice',
+    allTracks: 'All tracks',
+    contextPtLabel: 'PT-BR:',
+    contrastLabel: 'Focus:',
+    mastered: 'Mastered (≥75%)',
+    activityTypes: {
+      pronunciation: 'Pronunciation',
+      minimal_pair: 'Minimal Pair',
+      active_recall: 'Active Recall',
+      shadowing: 'Shadowing'
+    }
   }
 }
 
