@@ -5,8 +5,14 @@ import { closeDatabase, initDatabase } from './database'
 import { seedPracticeItems } from './database/seed'
 import { registerAiHandlers } from './ipc/ai-handlers'
 import { registerDbHandlers } from './ipc/db-handlers'
+import { registerPomodoroHandlers } from './ipc/pomodoro-handlers'
 import { registerValidatedHandler } from './ipc/safe-handle'
 import { registerSettingsHandlers } from './ipc/settings-handlers'
+import {
+  cleanupPomodoro,
+  setPomodoroWindowFocusHandler
+} from './services/pomodoro'
+import { destroyTray, initTray } from './tray'
 import {
   hideQuickCheckWindow,
   registerQuickCheckShortcut,
@@ -16,6 +22,30 @@ import {
 } from './windows/quick-check'
 
 let mainWindow: BrowserWindow | null = null
+let isQuittingApp = false
+
+function showMainWindow(): void {
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    const win = createMainWindow()
+    win.once('ready-to-show', () => {
+      win.show()
+      win.focus()
+    })
+    return
+  }
+
+  if (mainWindow.isMinimized()) {
+    mainWindow.restore()
+  }
+  mainWindow.show()
+  mainWindow.focus()
+}
+
+function quitApplication(): void {
+  isQuittingApp = true
+  setAppQuitting(true)
+  app.quit()
+}
 
 function createMainWindow(): BrowserWindow {
   const win = new BrowserWindow({
@@ -38,12 +68,17 @@ function createMainWindow(): BrowserWindow {
     win.show()
   })
 
+  // Hide to Windows System Tray instead of quitting so Pomodoro & Ctrl+Shift+E keep running.
+  win.on('close', (event) => {
+    if (!isQuittingApp) {
+      event.preventDefault()
+      win.hide()
+    }
+  })
+
   win.on('closed', () => {
     if (mainWindow === win) {
       mainWindow = null
-    }
-    if (process.platform !== 'darwin') {
-      app.quit()
     }
   })
 
@@ -95,51 +130,59 @@ function registerWindowHandlers(): void {
   })
 }
 
-function registerPomodoroStubHandlers(): void {
-  const notImplemented = (): never => {
-    throw new Error('Pomodoro System Tray sync is planned for v0.2.0')
+const gotSingleInstanceLock = app.requestSingleInstanceLock()
+
+if (!gotSingleInstanceLock) {
+  app.quit()
+} else {
+  if (process.platform === 'win32') {
+    app.setAppUserModelId('com.englishchecks.desktop')
   }
 
-  registerValidatedHandler(IPC_CHANNELS.POMODORO_GET_STATE, null, () => ({
-    mode: 'focus' as const,
-    status: 'idle' as const,
-    remainingSeconds: 25 * 60,
-    totalSeconds: 25 * 60
-  }))
-  registerValidatedHandler(IPC_CHANNELS.POMODORO_START, null, notImplemented)
-  registerValidatedHandler(IPC_CHANNELS.POMODORO_PAUSE, null, notImplemented)
-  registerValidatedHandler(IPC_CHANNELS.POMODORO_RESET, null, notImplemented)
-}
+  app.on('second-instance', () => {
+    showMainWindow()
+  })
 
-app.whenReady().then(() => {
-  initDatabase()
-  seedPracticeItems()
-  registerDbHandlers()
-  registerAiHandlers()
-  registerSettingsHandlers()
-  registerWindowHandlers()
-  registerPomodoroStubHandlers()
-  registerQuickCheckShortcut()
-  createMainWindow()
+  app.whenReady().then(() => {
+    initDatabase()
+    seedPracticeItems()
+    registerDbHandlers()
+    registerAiHandlers()
+    registerSettingsHandlers()
+    registerWindowHandlers()
+    registerPomodoroHandlers()
+    setPomodoroWindowFocusHandler(showMainWindow)
+    registerQuickCheckShortcut()
+    createMainWindow()
+    initTray({
+      onShowMainWindow: showMainWindow,
+      onToggleQuickCheck: () => {
+        toggleQuickCheckWindow()
+      },
+      onQuitApp: quitApplication
+    })
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createMainWindow()
+    app.on('activate', () => {
+      showMainWindow()
+    })
+  })
+
+  app.on('before-quit', () => {
+    isQuittingApp = true
+    setAppQuitting(true)
+  })
+
+  app.on('will-quit', () => {
+    cleanupPomodoro()
+    destroyTray()
+    unregisterGlobalShortcuts()
+    closeDatabase()
+  })
+
+  // Keep running in the Windows System Tray when windows are closed/hidden.
+  app.on('window-all-closed', () => {
+    if (isQuittingApp && process.platform !== 'darwin') {
+      app.quit()
     }
   })
-})
-
-app.on('before-quit', () => {
-  setAppQuitting(true)
-})
-
-app.on('will-quit', () => {
-  unregisterGlobalShortcuts()
-  closeDatabase()
-})
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+}
