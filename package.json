@@ -1,6 +1,6 @@
 {
   "name": "english-checks-desktop",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "AI-powered English pronunciation and writing desktop studio",
   "main": "./out/main/index.js",

@@ -11,6 +11,7 @@ import {
   saveAppLanguage,
   saveGeminiApiKey
 } from '../services/settings-store'
+import { refreshTray } from '../tray'
 import { registerValidatedHandler } from './safe-handle'
 
 function broadcastSettingsUpdated(status: SettingsStatus): SettingsStatus {
@@ -19,6 +20,7 @@ function broadcastSettingsUpdated(status: SettingsStatus): SettingsStatus {
       win.webContents.send(IPC_CHANNELS.SETTINGS_UPDATED, status)
     }
   }
+  refreshTray()
   return status
 }
 
