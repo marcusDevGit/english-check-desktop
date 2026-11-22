@@ -1,8 +1,17 @@
 import { z } from 'zod'
 import { IPC_CHANNELS } from './ipc-channels'
+import {
+  CefrLevelSchema,
+  TrackSourceTypeSchema,
+  type CompleteLessonActivityRequest,
+  type CompleteLessonActivityResponse,
+  type GetTrackLessonsRequest,
+  type LessonSummary
+} from './tracks-contracts'
 
 export { IPC_CHANNELS }
 export type { IpcChannel } from './ipc-channels'
+export * from './tracks-contracts'
 
 /**
  * Standard discriminated union returned by every IPC invoke handler.
@@ -110,6 +119,70 @@ export const EvaluateRecallResponseSchema = z.object({
 })
 export type EvaluateRecallResponse = z.infer<typeof EvaluateRecallResponseSchema>
 
+export const EvaluateOpenQaRequestSchema = z.object({
+  audio: Uint8ArraySchema,
+  mimeType: z.string().trim().min(1),
+  question: z.string().trim().min(1).max(600),
+  expectedTopics: z.array(z.string().trim().min(1)).min(1).max(6),
+  level: CefrLevelSchema,
+  durationSeconds: z.number().int().nonnegative().optional()
+})
+export type EvaluateOpenQaRequest = z.infer<typeof EvaluateOpenQaRequestSchema>
+
+export const EvaluateOpenQaResponseSchema = z.object({
+  score: z.number().min(0).max(100),
+  transcript: z.string(),
+  coveredTopics: z.array(z.string()),
+  missingTopics: z.array(z.string()),
+  feedback: z.string(),
+  improvedAnswer: z.string()
+})
+export type EvaluateOpenQaResponse = z.infer<typeof EvaluateOpenQaResponseSchema>
+
+export const RoleplayMessageSchema = z.object({
+  role: z.enum(['assistant', 'user']),
+  content: z.string().trim().min(1).max(1500)
+})
+export type RoleplayMessage = z.infer<typeof RoleplayMessageSchema>
+
+export const RoleplayTurnRequestSchema = z
+  .object({
+    persona: z.string().trim().min(1).max(300),
+    scenario: z.string().trim().min(1).max(800),
+    objectives: z.array(z.string().trim().min(1)).min(1).max(5),
+    history: z.array(RoleplayMessageSchema).min(1).max(16),
+    userMessage: z.string().trim().max(1500).optional(),
+    audio: Uint8ArraySchema.optional(),
+    mimeType: z.string().trim().min(1).optional()
+  })
+  .refine(
+    (value) =>
+      Boolean(
+        (value.userMessage && value.userMessage.trim().length > 0) ||
+          (value.audio && value.mimeType)
+      ),
+    { message: 'Provide either a text message or an audio recording.' }
+  )
+export type RoleplayTurnRequest = z.infer<typeof RoleplayTurnRequestSchema>
+
+export const RoleplayTurnResponseSchema = z.object({
+  userTranscript: z.string(),
+  assistantReply: z.string(),
+  achievedObjectives: z.array(z.string()),
+  turnFeedback: z.string(),
+  suggestedScore: z.number().min(0).max(100)
+})
+export type RoleplayTurnResponse = z.infer<typeof RoleplayTurnResponseSchema>
+
+export const GenerateCustomTrackRequestSchema = z.object({
+  titleHint: z.string().trim().max(120).optional(),
+  level: CefrLevelSchema,
+  sourceText: z.string().trim().min(80).max(12000)
+})
+export type GenerateCustomTrackRequest = z.infer<
+  typeof GenerateCustomTrackRequestSchema
+>
+
 export const GenerateDrillsRequestSchema = z.object({
   count: z.number().int().min(1).max(5).default(3)
 })
@@ -167,7 +240,7 @@ export const ActivityTypeSchema = z.enum([
 ])
 export type ActivityType = z.infer<typeof ActivityTypeSchema>
 
-export const TrackLevelSchema = z.enum(['A2', 'B1', 'B2', 'C1'])
+export const TrackLevelSchema = CefrLevelSchema
 export type TrackLevel = z.infer<typeof TrackLevelSchema>
 
 export const LearningTrackProgressSchema = z.object({
@@ -178,10 +251,16 @@ export const LearningTrackProgressSchema = z.object({
   descriptionPt: z.string(),
   descriptionEn: z.string(),
   level: TrackLevelSchema,
+  category: z.string(),
+  sourceType: TrackSourceTypeSchema,
   orderIndex: z.number().int(),
   totalItems: z.number().int(),
   completedItems: z.number().int(),
-  nextItemId: z.number().int().nullable()
+  nextItemId: z.number().int().nullable(),
+  totalLessons: z.number().int().nonnegative(),
+  completedLessons: z.number().int().nonnegative(),
+  totalXp: z.number().int().nonnegative(),
+  earnedXp: z.number().int().nonnegative()
 })
 export type LearningTrackProgress = z.infer<typeof LearningTrackProgressSchema>
 
@@ -263,6 +342,15 @@ export interface EnglishChecksApi {
   evaluateRecall: (
     payload: EvaluateRecallRequest
   ) => Promise<IpcResult<EvaluateRecallResponse>>
+  evaluateOpenQa: (
+    payload: EvaluateOpenQaRequest
+  ) => Promise<IpcResult<EvaluateOpenQaResponse>>
+  evaluateRoleplayTurn: (
+    payload: RoleplayTurnRequest
+  ) => Promise<IpcResult<RoleplayTurnResponse>>
+  generateCustomTrack: (
+    payload: GenerateCustomTrackRequest
+  ) => Promise<IpcResult<LearningTrackProgress>>
   generateCustomDrills: (
     payload?: GenerateDrillsRequest
   ) => Promise<IpcResult<PracticeItem[]>>
@@ -271,6 +359,12 @@ export interface EnglishChecksApi {
     payload: SaveSessionRequest
   ) => Promise<IpcResult<StudySession>>
   getTracks: () => Promise<IpcResult<LearningTrackProgress[]>>
+  getTrackLessons: (
+    payload: GetTrackLessonsRequest
+  ) => Promise<IpcResult<LessonSummary[]>>
+  completeLessonActivity: (
+    payload: CompleteLessonActivityRequest
+  ) => Promise<IpcResult<CompleteLessonActivityResponse>>
   getPracticeItems: () => Promise<IpcResult<PracticeItem[]>>
   updatePracticeReview: (
     payload: UpdatePracticeReviewRequest

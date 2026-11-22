@@ -15,6 +15,13 @@
       "when": 1795273345127,
       "tag": "0001_red_kate_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1795305956566,
+      "tag": "0002_rich_curriculum_lessons",
+      "breakpoints": true
     }
   ]
 }

@@ -1,13 +1,17 @@
 import {
+  CompleteLessonActivityRequestSchema,
+  GetTrackLessonsRequestSchema,
   IPC_CHANNELS,
   SaveSessionRequestSchema,
   UpdatePracticeReviewRequestSchema
 } from '../../shared/ipc-contracts'
 import {
+  completeLessonActivity,
   getLearningTracksProgress,
   getPhonemeErrors,
   getPracticeItems,
   getStudyStats,
+  getTrackLessons,
   saveStudySession,
   updatePracticeReview
 } from '../database/repository'
@@ -24,6 +28,18 @@ export function registerDbHandlers(): void {
 
   registerValidatedHandler(IPC_CHANNELS.DB_GET_TRACKS, null, () =>
     getLearningTracksProgress()
+  )
+
+  registerValidatedHandler(
+    IPC_CHANNELS.DB_GET_TRACK_LESSONS,
+    GetTrackLessonsRequestSchema,
+    (input) => getTrackLessons(input)
+  )
+
+  registerValidatedHandler(
+    IPC_CHANNELS.DB_COMPLETE_LESSON_ACTIVITY,
+    CompleteLessonActivityRequestSchema,
+    (input) => completeLessonActivity(input)
   )
 
   registerValidatedHandler(IPC_CHANNELS.DB_GET_PRACTICE_ITEMS, null, () =>

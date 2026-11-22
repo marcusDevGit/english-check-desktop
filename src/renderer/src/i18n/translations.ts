@@ -222,6 +222,49 @@ export interface Translations {
     contrastLabel: string
     mastered: string
     activityTypes: Record<ActivityType, string>
+    guidedLessonsTab: string
+    quickDrillsTab: string
+    cheatSheetTitle: string
+    cheatSheetSubtitle: string
+    startLessonBtn: string
+    openLessonBtn: string
+    reviewLessonBtn: string
+    backToTracks: string
+    stepLabels: {
+      cheatSheet: string
+      shadowing: string
+      listening_repeat: string
+      open_qa: string
+      micro_writing: string
+      roleplay: string
+    }
+    starterChipsLabel: string
+    objectivesLabel: string
+    sendTurn: string
+    sendVoiceTurn: string
+    finishRoleplay: string
+    nextStep: string
+    lessonCompletedBanner: string
+    listenNative: string
+    analyzeAudio: string
+    analyzing: string
+    checkWriting: string
+    showSampleAnswer: string
+    hideSampleAnswer: string
+    noLessonsHint: string
+    createCustomBtn: string
+    customBadge: string
+    customModalTitle: string
+    customModalSubtitle: string
+    customTitleLabel: string
+    customTitlePlaceholder: string
+    customLevelLabel: string
+    customSourceLabel: string
+    customSourcePlaceholder: string
+    customSourceMinError: string
+    customCancel: string
+    customGenerateBtn: string
+    customGeneratingBtn: string
   }
 }
 
@@ -452,7 +495,50 @@ const PT_BR: Translations = {
       minimal_pair: 'Par Mínimo',
       active_recall: 'Active Recall',
       shadowing: 'Shadowing'
-    }
+    },
+    guidedLessonsTab: 'Lições Guiadas (5 Etapas)',
+    quickDrillsTab: 'Drills Rápidos',
+    cheatSheetTitle: 'Pre-Lesson Cheat Sheet • Chunking & Phrasal Verbs',
+    cheatSheetSubtitle: 'Revise as expressões-chave e a pronúncia antes de começar os 5 exercícios.',
+    startLessonBtn: 'Começar Lição (5 Etapas)',
+    openLessonBtn: 'Iniciar Lição',
+    reviewLessonBtn: 'Revisar Lição',
+    backToTracks: 'Voltar às Trilhas',
+    stepLabels: {
+      cheatSheet: 'Cheat Sheet',
+      shadowing: '1. Shadowing',
+      listening_repeat: '2. Listening',
+      open_qa: '3. Open Q&A',
+      micro_writing: '4. Escrita',
+      roleplay: '5. Roleplay'
+    },
+    starterChipsLabel: 'Starter Chips (clique para destravar):',
+    objectivesLabel: 'Objetivos verificáveis do diálogo',
+    sendTurn: 'Enviar Turno',
+    sendVoiceTurn: 'Enviar Áudio no Roleplay',
+    finishRoleplay: 'Concluir Roleplay',
+    nextStep: 'Próxima Etapa',
+    lessonCompletedBanner: 'Lição concluída!',
+    listenNative: 'Ouvir Nativo',
+    analyzeAudio: 'Avaliar com IA',
+    analyzing: 'Avaliando...',
+    checkWriting: 'Avaliar Resposta Escrita',
+    showSampleAnswer: 'Ver resposta modelo',
+    hideSampleAnswer: 'Ocultar resposta modelo',
+    noLessonsHint: 'Nenhuma lição guiada cadastrada nesta trilha ainda.',
+    createCustomBtn: '+ Criar Trilha de um Conteúdo Meu',
+    customBadge: 'Personalizada',
+    customModalTitle: 'Criar Trilha de um Conteúdo Meu',
+    customModalSubtitle: 'Cole a transcrição de um podcast, artigo técnico ou anotação em inglês (mín. 80 caracteres). A IA gera Cheat Sheet + 5 etapas offline no seu SQLite.',
+    customTitleLabel: 'Título opcional',
+    customTitlePlaceholder: 'Ex.: Podcast sobre Arquitetura Event-Driven',
+    customLevelLabel: 'Nível CEFR alvo',
+    customSourceLabel: 'Texto ou transcrição em inglês',
+    customSourcePlaceholder: 'Cole aqui o trecho do artigo, documentação ou episódio de podcast...',
+    customSourceMinError: 'Cole pelo menos 80 caracteres para gerar uma trilha relevante.',
+    customCancel: 'Cancelar',
+    customGenerateBtn: 'Gerar Trilha Completa',
+    customGeneratingBtn: 'Gerando trilha com IA...'
   }
 }
 
@@ -683,7 +769,50 @@ const EN: Translations = {
       minimal_pair: 'Minimal Pair',
       active_recall: 'Active Recall',
       shadowing: 'Shadowing'
-    }
+    },
+    guidedLessonsTab: 'Guided Lessons (5 Steps)',
+    quickDrillsTab: 'Quick Drills',
+    cheatSheetTitle: 'Pre-Lesson Cheat Sheet • Chunking & Phrasal Verbs',
+    cheatSheetSubtitle: 'Review key expressions and IPA before starting the 5-step lesson.',
+    startLessonBtn: 'Start Lesson (5 Steps)',
+    openLessonBtn: 'Start Lesson',
+    reviewLessonBtn: 'Review Lesson',
+    backToTracks: 'Back to Tracks',
+    stepLabels: {
+      cheatSheet: 'Cheat Sheet',
+      shadowing: '1. Shadowing',
+      listening_repeat: '2. Listening',
+      open_qa: '3. Open Q&A',
+      micro_writing: '4. Writing',
+      roleplay: '5. Roleplay'
+    },
+    starterChipsLabel: 'Starter Chips (click to unlock phrasing):',
+    objectivesLabel: 'Verifiable dialogue objectives',
+    sendTurn: 'Send Turn',
+    sendVoiceTurn: 'Send Voice Turn',
+    finishRoleplay: 'Finish Roleplay',
+    nextStep: 'Next Step',
+    lessonCompletedBanner: 'Lesson completed!',
+    listenNative: 'Listen Native',
+    analyzeAudio: 'Evaluate with AI',
+    analyzing: 'Evaluating...',
+    checkWriting: 'Evaluate Writing',
+    showSampleAnswer: 'Show sample answer',
+    hideSampleAnswer: 'Hide sample answer',
+    noLessonsHint: 'No guided lessons seeded for this track yet.',
+    createCustomBtn: '+ Create Track from My Content',
+    customBadge: 'Custom',
+    customModalTitle: 'Create Track from Your Content',
+    customModalSubtitle: 'Paste an English podcast transcript, tech article, or notes (min 80 chars). Gemini builds a Cheat Sheet + 5-step lesson stored offline in SQLite.',
+    customTitleLabel: 'Optional title',
+    customTitlePlaceholder: 'e.g., Podcast on Event-Driven Systems',
+    customLevelLabel: 'Target CEFR level',
+    customSourceLabel: 'English text or transcript',
+    customSourcePlaceholder: 'Paste your article excerpt, docs, or podcast transcript here...',
+    customSourceMinError: 'Paste at least 80 characters to generate a rich track.',
+    customCancel: 'Cancel',
+    customGenerateBtn: 'Generate Full Track',
+    customGeneratingBtn: 'Generating track with AI...'
   }
 }
 

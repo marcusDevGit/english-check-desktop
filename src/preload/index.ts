@@ -16,6 +16,15 @@ const englishChecksApi: EnglishChecksApi = {
   evaluateRecall: (payload) =>
     ipcRenderer.invoke(IPC_CHANNELS.AI_EVALUATE_RECALL, payload),
 
+  evaluateOpenQa: (payload) =>
+    ipcRenderer.invoke(IPC_CHANNELS.AI_EVALUATE_OPEN_QA, payload),
+
+  evaluateRoleplayTurn: (payload) =>
+    ipcRenderer.invoke(IPC_CHANNELS.AI_ROLEPLAY_TURN, payload),
+
+  generateCustomTrack: (payload) =>
+    ipcRenderer.invoke(IPC_CHANNELS.AI_GENERATE_CUSTOM_TRACK, payload),
+
   generateCustomDrills: (payload) =>
     ipcRenderer.invoke(IPC_CHANNELS.AI_GENERATE_DRILLS, payload ?? { count: 3 }),
 
@@ -25,6 +34,12 @@ const englishChecksApi: EnglishChecksApi = {
     ipcRenderer.invoke(IPC_CHANNELS.DB_SAVE_SESSION, payload),
 
   getTracks: () => ipcRenderer.invoke(IPC_CHANNELS.DB_GET_TRACKS),
+
+  getTrackLessons: (payload) =>
+    ipcRenderer.invoke(IPC_CHANNELS.DB_GET_TRACK_LESSONS, payload),
+
+  completeLessonActivity: (payload) =>
+    ipcRenderer.invoke(IPC_CHANNELS.DB_COMPLETE_LESSON_ACTIVITY, payload),
 
   getPracticeItems: () =>
     ipcRenderer.invoke(IPC_CHANNELS.DB_GET_PRACTICE_ITEMS),

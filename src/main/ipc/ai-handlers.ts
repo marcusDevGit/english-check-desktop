@@ -1,22 +1,30 @@
 import {
   AnalyzePronunciationRequestSchema,
   CheckGrammarRequestSchema,
+  EvaluateOpenQaRequestSchema,
   EvaluateRecallRequestSchema,
+  GenerateCustomTrackRequestSchema,
   GenerateDrillsRequestSchema,
-  IPC_CHANNELS
+  IPC_CHANNELS,
+  RoleplayTurnRequestSchema
 } from '../../shared/ipc-contracts'
 import {
+  getLearningTracksProgress,
   getPhonemeErrors,
   insertCustomPracticeItems,
   saveStudySession,
   updatePracticeReview,
+  upsertGeneratedCurriculumTracks,
   upsertPhonemeErrors
 } from '../database/repository'
 import {
   analyzePronunciation,
   checkWriting,
   evaluateActiveRecall,
-  generateCustomDrills
+  evaluateOpenQa,
+  evaluateRoleplayTurn,
+  generateCustomDrills,
+  generateCustomTrackFromContent
 } from '../services/ai-evaluator'
 import { registerValidatedHandler } from './safe-handle'
 
@@ -108,6 +116,42 @@ export function registerAiHandlers(): void {
       const topErrors = getPhonemeErrors()
       const generated = await generateCustomDrills(topErrors, input.count)
       return insertCustomPracticeItems(generated)
+    }
+  )
+
+  registerValidatedHandler(
+    IPC_CHANNELS.AI_EVALUATE_OPEN_QA,
+    EvaluateOpenQaRequestSchema,
+    async (input) => {
+      const result = await evaluateOpenQa(input)
+      saveStudySession({
+        type: 'pronunciation',
+        durationSeconds: input.durationSeconds ?? 20,
+        score: Math.round(result.score)
+      })
+      return result
+    }
+  )
+
+  registerValidatedHandler(
+    IPC_CHANNELS.AI_ROLEPLAY_TURN,
+    RoleplayTurnRequestSchema,
+    async (input) => evaluateRoleplayTurn(input)
+  )
+
+  registerValidatedHandler(
+    IPC_CHANNELS.AI_GENERATE_CUSTOM_TRACK,
+    GenerateCustomTrackRequestSchema,
+    async (input) => {
+      const generatedTrack = await generateCustomTrackFromContent(input)
+      upsertGeneratedCurriculumTracks([generatedTrack], 'custom_text')
+      const created = getLearningTracksProgress().find(
+        (track) => track.slug === generatedTrack.slug
+      )
+      if (!created) {
+        throw new Error('Failed to load newly generated custom track.')
+      }
+      return created
     }
   )
 }

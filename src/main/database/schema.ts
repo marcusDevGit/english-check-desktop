@@ -18,8 +18,51 @@ export const learningTracks = sqliteTable('learning_tracks', {
   descriptionPt: text('description_pt').notNull(),
   descriptionEn: text('description_en').notNull(),
   level: text('level', { enum: ['A2', 'B1', 'B2', 'C1'] }).notNull(),
+  category: text('category').notNull().default('general'),
+  sourceType: text('source_type', { enum: ['seed', 'custom_text'] })
+    .notNull()
+    .default('seed'),
   orderIndex: integer('order_index').notNull().default(0)
 })
+
+export const lessons = sqliteTable('lessons', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  trackId: integer('track_id')
+    .notNull()
+    .references(() => learningTracks.id, { onDelete: 'cascade' }),
+  slug: text('slug').notNull().unique(),
+  titlePt: text('title_pt').notNull(),
+  titleEn: text('title_en').notNull(),
+  xpReward: integer('xp_reward').notNull().default(100),
+  cheatSheetJson: text('cheat_sheet_json').notNull(),
+  orderIndex: integer('order_index').notNull().default(0),
+  bestScore: integer('best_score'),
+  completedAt: text('completed_at')
+})
+
+export const lessonActivities = sqliteTable(
+  'lesson_activities',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    lessonId: integer('lesson_id')
+      .notNull()
+      .references(() => lessons.id, { onDelete: 'cascade' }),
+    stepOrder: integer('step_order').notNull(),
+    activityType: text('activity_type', {
+      enum: ['shadowing', 'listening_repeat', 'open_qa', 'micro_writing', 'roleplay']
+    }).notNull(),
+    payloadJson: text('payload_json').notNull(),
+    completed: integer('completed', { mode: 'boolean' }).notNull().default(false),
+    score: integer('score'),
+    updatedAt: text('updated_at')
+  },
+  (table) => [
+    uniqueIndex('lesson_activities_lesson_step_idx').on(
+      table.lessonId,
+      table.stepOrder
+    )
+  ]
+)
 
 export const practiceItems = sqliteTable('practice_items', {
   id: integer('id').primaryKey({ autoIncrement: true }),

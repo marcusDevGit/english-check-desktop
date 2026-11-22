@@ -1,6 +1,6 @@
 {
   "name": "english-checks-desktop",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "AI-powered English pronunciation and writing desktop studio",
   "main": "./out/main/index.js",
@@ -11,6 +11,7 @@
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "generate:tracks": "node scripts/generate-tracks.ts",
     "audit:deps": "npm audit",
     "postinstall": "install-electron"
   },

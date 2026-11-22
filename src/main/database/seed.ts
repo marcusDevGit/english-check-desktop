@@ -1,6 +1,12 @@
 import { sql } from 'drizzle-orm'
-import type { ActivityType, TrackLevel } from '../../shared/ipc-contracts'
+import {
+  CurriculumSeedSchema,
+  type ActivityType,
+  type TrackLevel
+} from '../../shared/ipc-contracts'
+import rawCurriculumSeed from './data/curriculum-seed.json'
 import { getDb } from './index'
+import { upsertGeneratedCurriculumTracks } from './repository'
 import { learningTracks, practiceItems } from './schema'
 
 interface SeedTrack {
@@ -361,4 +367,7 @@ export function seedPracticeItems(): void {
       })
       .run()
   }
+
+  const parsedCurriculum = CurriculumSeedSchema.parse(rawCurriculumSeed)
+  upsertGeneratedCurriculumTracks(parsedCurriculum, 'seed')
 }

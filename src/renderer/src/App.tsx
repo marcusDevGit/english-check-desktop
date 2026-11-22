@@ -187,6 +187,7 @@ export default function App() {
             <TracksView
               language={language}
               onOpenTrackItem={handleOpenTrackItem}
+              onSessionRecorded={refreshStreak}
             />
           )}
 

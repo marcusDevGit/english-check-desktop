@@ -1,0 +1,148 @@
+{
+  "metadata": {
+    "description": "Curated open-data inspired linguistic seeds (Oxford 3000/5000 CEFR progressions, CMUdict minimal-pair IPA patterns, and Tatoeba/DailyDialog communicative contexts) used by scripts/generate-tracks.ts.",
+    "licenseNote": "Educational seed metadata compiled for PT-BR -> EN CEFR A2-C1 curriculum generation."
+  },
+  "cmudictPhoneticTraps": [
+    {
+      "id": "th-voiceless-voiced",
+      "phonemes": "/θ/ vs /ð/",
+      "ptBrTrap": "Replacing interdental fricatives with /t/, /d/, /s/, or /z/",
+      "minimalPairs": [
+        { "wordA": "thought", "ipaA": "/θɔːt/", "wordB": "taught", "ipaB": "/tɔːt/" },
+        { "wordA": "three", "ipaA": "/θriː/", "wordB": "tree", "ipaB": "/triː/" },
+        { "wordA": "breathe", "ipaA": "/briːð/", "wordB": "breed", "ipaB": "/briːd/" }
+      ]
+    },
+    {
+      "id": "vowel-tense-lax",
+      "phonemes": "/iː/ vs /ɪ/",
+      "ptBrTrap": "Merging long /iː/ and short lax /ɪ/ into a single Brazilian /i/",
+      "minimalPairs": [
+        { "wordA": "leave", "ipaA": "/liːv/", "wordB": "live", "ipaB": "/lɪv/" },
+        { "wordA": "sheet", "ipaA": "/ʃiːt/", "wordB": "shit", "ipaB": "/ʃɪt/" },
+        { "wordA": "reach", "ipaA": "/riːtʃ/", "wordB": "rich", "ipaB": "/rɪtʃ/" }
+      ]
+    },
+    {
+      "id": "ed-past-endings",
+      "phonemes": "-ed /t/, /d/, /ɪd/",
+      "ptBrTrap": "Adding an extra syllable (-ed pronounced as /ɛdʒɪ/) after voiceless stops/fricatives",
+      "minimalPairs": [
+        { "wordA": "worked", "ipaA": "/wɜːrkt/", "wordB": "waited", "ipaB": "/ˈweɪtɪd/" },
+        { "wordA": "shipped", "ipaA": "/ʃɪpt/", "wordB": "needed", "ipaB": "/ˈniːdɪd/" },
+        { "wordA": "fixed", "ipaA": "/fɪkst/", "wordB": "updated", "ipaB": "/ʌpˈdeɪtɪd/" }
+      ]
+    },
+    {
+      "id": "epenthetic-stops",
+      "phonemes": "Final /p, b, t, d, k, g, tʃ, dʒ/",
+      "ptBrTrap": "Adding a phantom /i/ vowel after word-final consonants (e.g., 'bug' -> 'buggy', 'app' -> 'appy')",
+      "minimalPairs": [
+        { "wordA": "step", "ipaA": "/stɛp/", "wordB": "stepped", "ipaB": "/stɛpt/" },
+        { "wordA": "check", "ipaA": "/tʃɛk/", "wordB": "checked", "ipaB": "/tʃɛkt/" },
+        { "wordA": "merge", "ipaA": "/mɜːrdʒ/", "wordB": "merged", "ipaB": "/mɜːrdʒd/" }
+      ]
+    },
+    {
+      "id": "ash-vowel-dark-l",
+      "phonemes": "/æ/ vs /ɛ/ & Dark /ɫ/",
+      "ptBrTrap": "Turning /æ/ into closed /ɛ/ or vocalizing final /l/ into /w/ (e.g., 'all' -> 'au')",
+      "minimalPairs": [
+        { "wordA": "bad", "ipaA": "/bæd/", "wordB": "bed", "ipaB": "/bɛd/" },
+        { "wordA": "sell", "ipaA": "/sɛl/", "wordB": "scale", "ipaB": "/skeɪl/" },
+        { "wordA": "call", "ipaA": "/kɔːl/", "wordB": "cool", "ipaB": "/kuːl/" }
+      ]
+    }
+  ],
+  "oxfordCefrVocabulary": {
+    "A2": [
+      { "term": "figure out", "ipa": "/ˈfɪɡjər aʊt/", "meaningPt": "descobrir / resolver", "pos": "phrasal verb" },
+      { "term": "grab a coffee", "ipa": "/ɡræb ə ˈkɔːfi/", "meaningPt": "pegar um café rápido", "pos": "collocation" },
+      { "term": "pick up", "ipa": "/pɪk ʌp/", "meaningPt": "buscar / retirar", "pos": "phrasal verb" },
+      { "term": "run late", "ipa": "/rʌn leɪt/", "meaningPt": "estar atrasado", "pos": "collocation" },
+      { "term": "could you double-check", "ipa": "/kʊd juː ˈdʌbəl tʃɛk/", "meaningPt": "você poderia conferir novamente", "pos": "polite request" },
+      { "term": "get used to", "ipa": "/ɡɛt juːst tuː/", "meaningPt": "acostumar-se com", "pos": "expression" }
+    ],
+    "B1": [
+      { "term": "boarding pass", "ipa": "/ˈbɔːrdɪŋ pæs/", "meaningPt": "cartão de embarque", "pos": "noun phrase" },
+      { "term": "missed connection", "ipa": "/mɪst kəˈnɛkʃən/", "meaningPt": "conexão perdida", "pos": "noun phrase" },
+      { "term": "narrow down", "ipa": "/ˈnæroʊ daʊn/", "meaningPt": "reduzir possibilidades / filtrar", "pos": "phrasal verb" },
+      { "term": "on the same page", "ipa": "/ɑːn ðə seɪm peɪdʒ/", "meaningPt": "alinhados / de acordo", "pos": "idiom" },
+      { "term": "push back", "ipa": "/pʊʃ bæk/", "meaningPt": "adiar ou questionar uma decisão", "pos": "phrasal verb" },
+      { "term": "reach out", "ipa": "/riːtʃ aʊt/", "meaningPt": "entrar em contato", "pos": "phrasal verb" }
+    ],
+    "B2": [
+      { "term": "bottleneck", "ipa": "/ˈbɑːtəlˌnɛk/", "meaningPt": "gargalo", "pos": "noun" },
+      { "term": "roll back", "ipa": "/roʊl bæk/", "meaningPt": "reverter versão / deploy", "pos": "phrasal verb" },
+      { "term": "walk through", "ipa": "/wɔːk θruː/", "meaningPt": "explicar passo a passo", "pos": "phrasal verb" },
+      { "term": "root cause", "ipa": "/ruːt kɔːz/", "meaningPt": "causa raiz", "pos": "noun phrase" },
+      { "term": "take ownership", "ipa": "/teɪk ˈoʊnərʃɪp/", "meaningPt": "assumir responsabilidade", "pos": "collocation" },
+      { "term": "measurable impact", "ipa": "/ˈmɛʒərəbəl ˈɪmpækt/", "meaningPt": "impacto mensurável", "pos": "collocation" }
+    ],
+    "C1": [
+      { "term": "trade-off", "ipa": "/ˈtreɪd ɔːf/", "meaningPt": "concessão / equilíbrio entre prós e contras", "pos": "noun" },
+      { "term": "diminishing returns", "ipa": "/dɪˈmɪnɪʃɪŋ rɪˈtɜːrnz/", "meaningPt": "retornos decrescentes", "pos": "noun phrase" },
+      { "term": "single point of failure", "ipa": "/ˈsɪŋɡəl pɔɪnt ʌv ˈfeɪljər/", "meaningPt": "ponto único de falha", "pos": "noun phrase" },
+      { "term": "weigh the pros and cons", "ipa": "/weɪ ðə proʊz ænd kɑːnz/", "meaningPt": "ponderar os prós e contras", "pos": "expression" },
+      { "term": "bake into", "ipa": "/beɪk ˈɪntuː/", "meaningPt": "embutir desde a base", "pos": "phrasal verb" },
+      { "term": "graceful degradation", "ipa": "/ˈɡreɪsfəl ˌdɛɡrəˈdeɪʃən/", "meaningPt": "degradação controlada sob falha", "pos": "noun phrase" }
+    ]
+  },
+  "tatoebaAndDailyDialogSeeds": [
+    {
+      "level": "A2",
+      "category": "phonetics",
+      "context": "Ordering and clarifying daily tasks without dropping final consonants or mispronouncing 'th'",
+      "sampleSentences": [
+        "I thought they worked through both bugs before lunch.",
+        "Please check the third draft and leave the notes on my desk."
+      ]
+    },
+    {
+      "level": "A2",
+      "category": "daily",
+      "context": "Coffee shop, polite requests, and rescheduling an appointment naturally",
+      "sampleSentences": [
+        "Could I get an iced oat latte and a toasted bagel, please?",
+        "I'm running about ten minutes late — could we push our call back slightly?"
+      ]
+    },
+    {
+      "level": "B1",
+      "category": "tech",
+      "context": "Daily standups, PR reviews, and explaining blockers clearly",
+      "sampleSentences": [
+        "I finished the migration yesterday, and now I'm narrowing down a flaky test.",
+        "Before we merge this PR, let's make sure we're on the same page about edge cases."
+      ]
+    },
+    {
+      "level": "B1",
+      "category": "travel",
+      "context": "Airport check-in, delayed flights, and resolving hotel reservation issues",
+      "sampleSentences": [
+        "My connecting flight was delayed, so I'm worried I might miss my boarding window.",
+        "Could you check if there's a quieter room available away from the elevator?"
+      ]
+    },
+    {
+      "level": "B2",
+      "category": "career",
+      "context": "Behavioral tech interviews, STAR stories, and explaining past ownership",
+      "sampleSentences": [
+        "When we noticed a database bottleneck, I took ownership of profiling the slowest queries.",
+        "Walking stakeholders through the root cause helped us avoid rolling back the whole release."
+      ]
+    },
+    {
+      "level": "C1",
+      "category": "tech",
+      "context": "Architecture design reviews, scalability limits, and articulating technical trade-offs",
+      "sampleSentences": [
+        "Adding a distributed cache solves read latency, though the trade-off is eventual consistency.",
+        "If we bake graceful degradation into the gateway, one downstream outage won't become a single point of failure."
+      ]
+    }
+  ]
+}
