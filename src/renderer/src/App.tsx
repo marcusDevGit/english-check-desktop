@@ -19,7 +19,9 @@ const DEFAULT_POMODORO_STATE: PomodoroState = {
 
 export default function App() {
   const [isQuickCheckRoute] = useState(
-    () => window.location.hash === '#/quick-check'
+    () =>
+      window.location.hash === '#/quick-check' ||
+      window.location.hash === '#quick-check'
   )
   const [language, setLanguage] = useState<AppLanguage>('pt-BR')
   const [activeView, setActiveView] = useState<StudioView>('pronunciation-lab')

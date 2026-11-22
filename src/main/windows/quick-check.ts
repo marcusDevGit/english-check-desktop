@@ -62,7 +62,7 @@ function getOrCreateQuickCheckWindow(): BrowserWindow {
     void win.loadURL(`${devUrl}#/quick-check`)
   } else {
     void win.loadFile(join(__dirname, '../renderer/index.html'), {
-      hash: 'quick-check'
+      hash: '/quick-check'
     })
   }
 
