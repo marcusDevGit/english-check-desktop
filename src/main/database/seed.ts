@@ -320,53 +320,55 @@ const SEED_PRACTICE_ITEMS: SeedPracticeItem[] = [
 export function seedPracticeItems(): void {
   const db = getDb()
 
-  for (const track of SEED_TRACKS) {
-    db.insert(learningTracks)
-      .values(track)
-      .onConflictDoUpdate({
-        target: learningTracks.slug,
-        set: {
-          titlePt: track.titlePt,
-          titleEn: track.titleEn,
-          descriptionPt: track.descriptionPt,
-          descriptionEn: track.descriptionEn,
-          level: track.level,
-          orderIndex: track.orderIndex
-        }
-      })
-      .run()
-  }
+  db.transaction((tx) => {
+    for (const track of SEED_TRACKS) {
+      tx.insert(learningTracks)
+        .values(track)
+        .onConflictDoUpdate({
+          target: learningTracks.slug,
+          set: {
+            titlePt: track.titlePt,
+            titleEn: track.titleEn,
+            descriptionPt: track.descriptionPt,
+            descriptionEn: track.descriptionEn,
+            level: track.level,
+            orderIndex: track.orderIndex
+          }
+        })
+        .run()
+    }
 
-  const trackRows = db.select().from(learningTracks).all()
-  const trackIdBySlug = new Map(trackRows.map((row) => [row.slug, row.id]))
+    const trackRows = tx.select().from(learningTracks).all()
+    const trackIdBySlug = new Map(trackRows.map((row) => [row.slug, row.id]))
 
-  for (const item of SEED_PRACTICE_ITEMS) {
-    const trackId = trackIdBySlug.get(item.trackSlug) ?? null
-    db.insert(practiceItems)
-      .values({
-        trackId,
-        activityType: item.activityType,
-        sentence: item.sentence,
-        ipa: item.ipa,
-        category: item.category,
-        promptPt: item.promptPt,
-        contrastHint: item.contrastHint,
-        orderIndex: item.orderIndex
-      })
-      .onConflictDoUpdate({
-        target: practiceItems.sentence,
-        set: {
-          trackId: sql`excluded.track_id`,
-          activityType: sql`excluded.activity_type`,
-          ipa: sql`excluded.ipa`,
-          category: sql`excluded.category`,
-          promptPt: sql`excluded.prompt_pt`,
-          contrastHint: sql`excluded.contrast_hint`,
-          orderIndex: sql`excluded.order_index`
-        }
-      })
-      .run()
-  }
+    for (const item of SEED_PRACTICE_ITEMS) {
+      const trackId = trackIdBySlug.get(item.trackSlug) ?? null
+      tx.insert(practiceItems)
+        .values({
+          trackId,
+          activityType: item.activityType,
+          sentence: item.sentence,
+          ipa: item.ipa,
+          category: item.category,
+          promptPt: item.promptPt,
+          contrastHint: item.contrastHint,
+          orderIndex: item.orderIndex
+        })
+        .onConflictDoUpdate({
+          target: practiceItems.sentence,
+          set: {
+            trackId: sql`excluded.track_id`,
+            activityType: sql`excluded.activity_type`,
+            ipa: sql`excluded.ipa`,
+            category: sql`excluded.category`,
+            promptPt: sql`excluded.prompt_pt`,
+            contrastHint: sql`excluded.contrast_hint`,
+            orderIndex: sql`excluded.order_index`
+          }
+        })
+        .run()
+    }
+  })
 
   const parsedCurriculum = CurriculumSeedSchema.parse(rawCurriculumSeed)
   upsertGeneratedCurriculumTracks(parsedCurriculum, 'seed')

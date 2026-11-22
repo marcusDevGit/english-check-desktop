@@ -1,0 +1,40 @@
+appId: com.englishchecks.desktop
+productName: English Checks
+copyright: Copyright © 2026 English Checks
+npmRebuild: false
+directories:
+  buildResources: build
+  output: dist
+files:
+  - out/**/*
+  - package.json
+  - "!.env"
+  - "!.env.*"
+  - "!*.db"
+  - "!*.db-*"
+  - "!*.sqlite"
+  - "!scripts/**"
+  - "!tests/**"
+  - "!src/**"
+  - "!drizzle.config.ts"
+  - "!electron.vite.config.ts"
+asarUnpack:
+  - node_modules/better-sqlite3/**/*
+extraResources:
+  - from: src/main/database/migrations
+    to: migrations
+    filter:
+      - "**/*"
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: English-Checks-Setup-${version}-${arch}.${ext}
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: English Checks

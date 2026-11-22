@@ -1,21 +1,21 @@
-# English Checks Desktop (`v0.4.0`)
+# English Checks Desktop (`v1.0.0`)
 
-Estúdio pessoal desktop (Windows) para treino de **pronúncia**, **escrita** e **trilhas guiadas em inglês**, com avaliação por IA focada em interferências comuns de falantes de **Português Brasileiro (`pt-BR`)**, Pomodoro integrado à bandeja do Windows, currículo estruturado offline CEFR (`A2`–`C1`) e persistência local em SQLite.
+Estúdio pessoal desktop (Windows) para treino de **pronúncia**, **escrita** e **trilhas guiadas em inglês**, com avaliação por IA focada em interferências comuns de falantes de **Português Brasileiro (`pt-BR`)**, Pomodoro integrado à bandeja do Windows, currículo estruturado offline CEFR (`A2`–`C1`), suíte de testes e instalador Windows NSIS (`.exe`).
 
 ---
 
-## Recursos (`v0.4.0`)
+## Recursos (`v1.0.0`)
 
 - **Rich Curriculum Engine & Roleplay Studio (6 Trilhas `A2`–`C1`):**
-  - Pipeline *build-time* (`npm run generate:tracks` via `scripts/generate-tracks.ts` + `scripts/sources/open-curriculum-raw.json`) validado por Zod (`src/shared/tracks-contracts.ts`) gerando `src/main/database/data/curriculum-seed.json` 100% offline.
-  - Modelo SQLite em 3 níveis (`learning_tracks` → `lessons` → `lesson_activities`) com suporte a **Pre-Lesson Cheat Sheet** (*Chunking & Phrasal Verbs* com IPA + áudio nativo), **Starter Chips** clicáveis (*scaffolding*) e player progressivo em **5 etapas**: **Shadowing**, **Listening Repeat**, **Open Q&A** (com timer), **Micro-Writing** e **Roleplay multi-turno** por texto ou áudio.
-  - **"+ Criar Trilha de um Conteúdo Meu":** transforma artigos técnicos, anotações ou transcrições de podcast em trilhas offline com *Cheat Sheet* e 5 etapas via Gemini.
+  - Pipeline _build-time_ (`npm run generate:tracks` via `scripts/generate-tracks.ts` + `scripts/sources/open-curriculum-raw.json`) validado por Zod (`src/shared/tracks-contracts.ts`) gerando `src/main/database/data/curriculum-seed.json` 100% offline.
+  - Modelo SQLite em 3 níveis (`learning_tracks` → `lessons` → `lesson_activities`) com suporte a **Pre-Lesson Cheat Sheet** (_Chunking & Phrasal Verbs_ com IPA + áudio nativo), **Starter Chips** clicáveis (_scaffolding_) e player progressivo em **5 etapas**: **Shadowing**, **Listening Repeat**, **Open Q&A** (com timer), **Micro-Writing** e **Roleplay multi-turno** por texto ou áudio.
+  - **"+ Criar Trilha de um Conteúdo Meu":** transforma artigos técnicos, anotações ou transcrições de podcast em trilhas offline com _Cheat Sheet_ e 5 etapas via Gemini.
 - **Pomodoro no Main Process & Windows System Tray:**
   - Timer centralizado no Main Process (`25 min` foco / `5 min` pausa) sincronizado em tempo real com a barra superior (`TitleBar`) via `pomodoro:tick`.
-  - Ícone na bandeja do sistema (*System Tray*) com tooltip ao vivo e menu de contexto (`Abrir English Checks`, `Quick Check`, `Iniciar/Pausar Pomodoro`, `Resetar Pomodoro`, `Sair`).
+  - Ícone na bandeja do sistema (_System Tray_) com tooltip ao vivo e menu de contexto (`Abrir English Checks`, `Quick Check`, `Iniciar/Pausar Pomodoro`, `Resetar Pomodoro`, `Sair`).
   - Fechar a janela principal oculta o app para a bandeja mantendo `Ctrl+Shift+E` ativo em segundo plano; blocos de foco concluídos são salvos em `study_sessions` e disparam `Notification` nativa do Windows.
-- **Trilhas de Aprendizado (*Learning Tracks*) & 24 Atividades:**
-  - 3 trilhas guiadas por nível CEFR (*Fonética Crítica PT-BR*, *Inglês Técnico & Reuniões de Dev*, *Conversação & Situações Reais*) com barra de progresso real em SQLite.
+- **Trilhas de Aprendizado (_Learning Tracks_) & 24 Atividades:**
+  - 3 trilhas guiadas por nível CEFR (_Fonética Crítica PT-BR_, _Inglês Técnico & Reuniões de Dev_, _Conversação & Situações Reais_) com barra de progresso real em SQLite.
   - 4 modos de exercício: **Pronúncia**, **Pares Mínimos**, **Shadowing** (ouvir com texto oculto) e **Active Recall (`PT-BR → EN`)** com avaliação de sentido pelo Gemini.
 - **Laboratório de Pronúncia:**
   - Seleção de microfone / interface de áudio USB (`navigator.mediaDevices.enumerateDevices()`).
@@ -23,8 +23,8 @@ Estúdio pessoal desktop (Windows) para treino de **pronúncia**, **escrita** e 
   - Reprodução comparativa da própria voz e referência nativa via `window.speechSynthesis` (com verificação de pacotes de voz `en-US` / `en-GB` no Windows SAPI).
   - Avaliação por palavra, nota acústica geral e dica articulatória focada em `PT-BR → EN`.
   - Atalhos: `Espaço` (gravar/parar), `R` (refazer), `Ctrl+R` (aleatório), `Enter` (próxima frase).
-- **Revisão de Escrita (*Writing Check*):**
-  - Avaliação por contexto (*Trabalho / Tech*, *E-mail*, *Conversa*, *Acadêmico*).
+- **Revisão de Escrita (_Writing Check_):**
+  - Avaliação por contexto (_Trabalho / Tech_, _E-mail_, _Conversa_, _Acadêmico_).
   - Nota de naturalidade, versão corrigida, alternativas mais naturais e explicações de gramática/calques do português (`Ctrl+Enter`).
 - **Deck de Revisão com IA & Progresso:**
   - Banco SQLite local (`better-sqlite3` + Drizzle ORM) com registro automático de erros recorrentes (`phoneme_errors`) e sessões (`study_sessions`).
@@ -70,9 +70,11 @@ npm run dev
 ### Scripts Disponíveis
 
 - `npm run dev` — inicia `electron-vite` em modo desenvolvimento.
+- `npm test` — executa os testes unitários nativos (`node --test tests/*.test.ts`).
 - `npm run generate:tracks` — executa `scripts/generate-tracks.ts` para regenerar `curriculum-seed.json` via Gemini usando `GEMINI_API_KEY` do `.env`.
 - `npm run typecheck` — executa `tsc --noEmit` separado para Node (`tsconfig.node.json`) e Web (`tsconfig.web.json`).
 - `npm run build` — gera o build de produção em `out/`.
+- `npm run dist:win` — gera o instalador Windows NSIS (`.exe`) em `dist/` via `electron-builder.yml`.
 - `npm run preview` — pré-visualiza o build gerado.
 - `npm run audit:deps` — executa auditoria de dependências (`npm audit`).
 
@@ -85,6 +87,7 @@ npm run dev
 
 ---
 
-## Roadmap Planejado
+## Próximas Evoluções (`v1.1.0+`)
 
-- **`v1.0.0` — Release Empacotada:** testes automatizados, instalador Windows NSIS (`.exe`) via `electron-builder` com migrations SQL via `extraResources` e evoluções futuras do Pomodoro (tempos configuráveis, pausa longa e meta diária).
+- **Pomodoro Avançado:** durações configuráveis de foco/pausa, pausa longa automática a cada 4 blocos e meta diária de pomodoros em `Progress & Stats`.
+- **Analytics & Repetição Espaçada:** algoritmo FSRS v4.5 completo e gráficos longitudinais de evolução.

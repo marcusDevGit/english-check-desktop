@@ -226,6 +226,7 @@ export function useAudioRecorder(language: AppLanguage = 'pt-BR'): UseAudioRecor
       recorder.start(100)
       setIsRecording(true)
 
+      let lastUiUpdate = 0
       const sampleFrame = (): void => {
         analyser.getByteTimeDomainData(timeData)
         let peak = 0
@@ -234,14 +235,18 @@ export function useAudioRecorder(language: AppLanguage = 'pt-BR'): UseAudioRecor
           if (normalized > peak) peak = normalized
         }
         const scaled = Math.min(1, peak * 1.8)
-        setInputLevel(scaled)
-        setDurationMs(Math.round(performance.now() - startTimeRef.current))
         peaksBufferRef.current.push(scaled)
 
-        setLiveSamples((prev) => {
-          const next = [...prev, scaled]
-          return next.length > 72 ? next.slice(next.length - 72) : next
-        })
+        const now = performance.now()
+        if (now - lastUiUpdate >= 50) {
+          lastUiUpdate = now
+          setInputLevel(scaled)
+          setDurationMs(Math.round(now - startTimeRef.current))
+          setLiveSamples((prev) => {
+            const next = [...prev, scaled]
+            return next.length > 72 ? next.slice(next.length - 72) : next
+          })
+        }
 
         rafIdRef.current = requestAnimationFrame(sampleFrame)
       }

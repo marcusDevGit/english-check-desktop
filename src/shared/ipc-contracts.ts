@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { IPC_CHANNELS } from './ipc-channels'
+import { IPC_CHANNELS } from './ipc-channels.ts'
 import {
   CefrLevelSchema,
   TrackSourceTypeSchema,
@@ -7,11 +7,11 @@ import {
   type CompleteLessonActivityResponse,
   type GetTrackLessonsRequest,
   type LessonSummary
-} from './tracks-contracts'
+} from './tracks-contracts.ts'
 
 export { IPC_CHANNELS }
-export type { IpcChannel } from './ipc-channels'
-export * from './tracks-contracts'
+export type { IpcChannel } from './ipc-channels.ts'
+export * from './tracks-contracts.ts'
 
 /**
  * Standard discriminated union returned by every IPC invoke handler.
