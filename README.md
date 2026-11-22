@@ -1,11 +1,15 @@
-# English Checks Desktop (`v0.3.0`)
+# English Checks Desktop (`v0.4.0`)
 
-Estúdio pessoal desktop (Windows) para treino de **pronúncia**, **escrita** e **trilhas guiadas em inglês**, com avaliação por IA focada em interferências comuns de falantes de **Português Brasileiro (`pt-BR`)**, Pomodoro integrado à bandeja do Windows e persistência local offline-first em SQLite.
+Estúdio pessoal desktop (Windows) para treino de **pronúncia**, **escrita** e **trilhas guiadas em inglês**, com avaliação por IA focada em interferências comuns de falantes de **Português Brasileiro (`pt-BR`)**, Pomodoro integrado à bandeja do Windows, currículo estruturado offline CEFR (`A2`–`C1`) e persistência local em SQLite.
 
 ---
 
-## Recursos (`v0.3.0`)
+## Recursos (`v0.4.0`)
 
+- **Rich Curriculum Engine & Roleplay Studio (6 Trilhas `A2`–`C1`):**
+  - Pipeline *build-time* (`npm run generate:tracks` via `scripts/generate-tracks.ts` + `scripts/sources/open-curriculum-raw.json`) validado por Zod (`src/shared/tracks-contracts.ts`) gerando `src/main/database/data/curriculum-seed.json` 100% offline.
+  - Modelo SQLite em 3 níveis (`learning_tracks` → `lessons` → `lesson_activities`) com suporte a **Pre-Lesson Cheat Sheet** (*Chunking & Phrasal Verbs* com IPA + áudio nativo), **Starter Chips** clicáveis (*scaffolding*) e player progressivo em **5 etapas**: **Shadowing**, **Listening Repeat**, **Open Q&A** (com timer), **Micro-Writing** e **Roleplay multi-turno** por texto ou áudio.
+  - **"+ Criar Trilha de um Conteúdo Meu":** transforma artigos técnicos, anotações ou transcrições de podcast em trilhas offline com *Cheat Sheet* e 5 etapas via Gemini.
 - **Pomodoro no Main Process & Windows System Tray:**
   - Timer centralizado no Main Process (`25 min` foco / `5 min` pausa) sincronizado em tempo real com a barra superior (`TitleBar`) via `pomodoro:tick`.
   - Ícone na bandeja do sistema (*System Tray*) com tooltip ao vivo e menu de contexto (`Abrir English Checks`, `Quick Check`, `Iniciar/Pausar Pomodoro`, `Resetar Pomodoro`, `Sair`).
@@ -66,6 +70,7 @@ npm run dev
 ### Scripts Disponíveis
 
 - `npm run dev` — inicia `electron-vite` em modo desenvolvimento.
+- `npm run generate:tracks` — executa `scripts/generate-tracks.ts` para regenerar `curriculum-seed.json` via Gemini usando `GEMINI_API_KEY` do `.env`.
 - `npm run typecheck` — executa `tsc --noEmit` separado para Node (`tsconfig.node.json`) e Web (`tsconfig.web.json`).
 - `npm run build` — gera o build de produção em `out/`.
 - `npm run preview` — pré-visualiza o build gerado.
@@ -82,5 +87,4 @@ npm run dev
 
 ## Roadmap Planejado
 
-- **`v0.4.0` — Rich Curriculum Engine & Roleplay Studio:** pipeline *build-time* (`scripts/generate-tracks.ts`) com fontes abertas + Gemini gerando currículo offline em 3 níveis (*Pre-Lesson Cheat Sheet*, `starterChips`, lições em 5 etapas com Roleplay multi-turno) e criação de trilha a partir de texto/podcast do usuário.
 - **`v1.0.0` — Release Empacotada:** testes automatizados, instalador Windows NSIS (`.exe`) via `electron-builder` com migrations SQL via `extraResources` e evoluções futuras do Pomodoro (tempos configuráveis, pausa longa e meta diária).
