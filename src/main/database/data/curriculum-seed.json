@@ -1,0 +1,722 @@
+[
+  {
+    "slug": "critical-phonetics",
+    "level": "A2",
+    "category": "phonetics",
+    "titlePt": "Fonética Crítica PT-BR",
+    "titleEn": "Critical PT-BR Phonetics",
+    "descriptionPt": "Domine os sons que mais causam sotaque e falhas de compreensão para brasileiros: th, finais -ed, /h/ vs /r/ e pares mínimos.",
+    "descriptionEn": "Master the sounds most affected by Portuguese L1 interference: th, -ed endings, /h/ vs /r/, and minimal vowel pairs.",
+    "orderIndex": 1,
+    "lessons": [
+      {
+        "slug": "critical-phonetics-th-and-ed",
+        "titlePt": "Sons do TH e Finais -ed Sem Vogal Extra",
+        "titleEn": "TH Consonants & Crisp -ed Endings",
+        "xpReward": 90,
+        "cheatSheet": [
+          {
+            "term": "figure out",
+            "ipa": "/ˈfɪɡjər aʊt/",
+            "meaningPt": "descobrir / resolver",
+            "example": "We figured out why the third request failed."
+          },
+          {
+            "term": "worked through",
+            "ipa": "/wɜːrkt θruː/",
+            "meaningPt": "trabalhar passo a passo até resolver",
+            "example": "They worked through both checklists before noon."
+          },
+          {
+            "term": "double-check",
+            "ipa": "/ˈdʌbəl tʃɛk/",
+            "meaningPt": "conferir novamente",
+            "example": "I double-checked the path before leaving the office."
+          }
+        ],
+        "activities": [
+          {
+            "stepOrder": 1,
+            "payload": {
+              "type": "shadowing",
+              "sentence": "I thought they worked through both checklists before lunch.",
+              "ipa": "/aɪ θɔːt ðeɪ wɜːrkt θruː boʊθ ˈtʃɛklɪsts bɪˈfɔːr lʌntʃ/",
+              "ptTranslation": "Eu achei que eles tinham passado pelas duas listas de verificação antes do almoço.",
+              "phoneticsTip": "Em 'thought' e 'through', toque levemente a ponta da língua nos dentes superiores (/θ/) sem soltar um /t/. Em 'worked', termine seco em /kt/ sem acrescentar um 'i' no final."
+            }
+          },
+          {
+            "stepOrder": 2,
+            "payload": {
+              "type": "listening_repeat",
+              "sentence": "She figured out the third bug and shipped the fix right away.",
+              "ipa": "/ʃi ˈfɪɡjərd aʊt ðə θɜːrd bʌɡ ænd ʃɪpt ðə fɪks raɪt əˈweɪ/",
+              "contextHint": "Contando que uma colega encontrou o terceiro erro e publicou a correção na hora.",
+              "connectedSpeechNote": "'figured out' liga como /ˈfɪɡjərd‿aʊt/; 'shipped the' reduz a pausa entre /pt/ e /ðə/."
+            }
+          },
+          {
+            "stepOrder": 3,
+            "payload": {
+              "type": "open_qa",
+              "question": "Tell me about three small tasks you finished yesterday and how you double-checked your work.",
+              "ptContext": "Responda em 2 a 3 frases usando verbos no passado (-ed) como 'worked', 'checked' ou 'finished' sem alongar a sílaba final.",
+              "suggestedSeconds": 20,
+              "expectedTopics": [
+                "Mention at least two completed tasks in the past tense",
+                "Explain how you verified or double-checked the result",
+                "Use crisp -ed endings without an extra vowel"
+              ],
+              "starterChips": [
+                "Yesterday morning, I worked on...",
+                "After I finished that task, I double-checked...",
+                "It took me a moment to figure out..."
+              ]
+            }
+          },
+          {
+            "stepOrder": 4,
+            "payload": {
+              "type": "micro_writing",
+              "scenario": "You finished reviewing a shared document with two teammates and noticed a small mistake in the third section.",
+              "taskPrompt": "Write a concise 2-3 sentence Slack message explaining what you checked and what you fixed.",
+              "targetExpressions": [
+                "figure out",
+                "double-check",
+                "third section"
+              ],
+              "starterChips": [
+                "Hey team, I just double-checked...",
+                "I figured out why the third section...",
+                "Everything is updated and ready for..."
+              ],
+              "sampleAnswer": "Hey team, I just double-checked our notes and figured out why the third section had old numbers. I fixed the table and checked the totals again, so we are ready for the meeting."
+            }
+          },
+          {
+            "stepOrder": 5,
+            "payload": {
+              "type": "roleplay",
+              "persona": "Alex, a friendly teammate reviewing a checklist with you before a client demo.",
+              "scenario": "You and Alex are confirming whether the presentation deck and test environment are ready for 2 PM.",
+              "openingLine": "Hey! Did you get a chance to go through the third slide and test the audio clip?",
+              "objectives": [
+                "Confirm what you already checked using past tense verbs",
+                "Mention one small detail you had to figure out or fix",
+                "Ask Alex to double-check one final item before the demo"
+              ],
+              "starterChips": [
+                "Yes, I worked through the whole deck and...",
+                "I figured out a small issue with...",
+                "Could you double-check if..."
+              ],
+              "maxTurns": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "tech-workplace",
+    "level": "B1",
+    "category": "tech",
+    "titlePt": "Inglês Técnico & Reuniões de Dev",
+    "titleEn": "Tech English & Engineering Meetings",
+    "descriptionPt": "Pratique frases reais de daily standup, code review, arquitetura, prazos e incidentes de produção.",
+    "descriptionEn": "Practice real-world phrases for daily standups, code reviews, architecture discussions, and incident updates.",
+    "orderIndex": 2,
+    "lessons": [
+      {
+        "slug": "tech-workplace-daily-standup",
+        "titlePt": "Daily Standup & Bloqueios Técnicos",
+        "titleEn": "Daily Standups & Unblocking Tasks",
+        "xpReward": 110,
+        "cheatSheet": [
+          {
+            "term": "narrow down",
+            "ipa": "/ˈnæroʊ daʊn/",
+            "meaningPt": "reduzir possibilidades / isolar a causa",
+            "example": "We narrowed the bug down to a stale cache entry."
+          },
+          {
+            "term": "on the same page",
+            "ipa": "/ɑːn ðə seɪm peɪdʒ/",
+            "meaningPt": "alinhados / com o mesmo entendimento",
+            "example": "Let's sync for five minutes so everyone is on the same page."
+          },
+          {
+            "term": "reach out",
+            "ipa": "/riːtʃ aʊt/",
+            "meaningPt": "entrar em contato / chamar alguém",
+            "example": "I'll reach out to the backend team if the endpoint still times out."
+          }
+        ],
+        "activities": [
+          {
+            "stepOrder": 1,
+            "payload": {
+              "type": "shadowing",
+              "sentence": "I finished the migration yesterday, and now I'm narrowing down a flaky test.",
+              "ipa": "/aɪ ˈfɪnɪʃt ðə maɪˈɡreɪʃən ˈjɛstərdeɪ ænd naʊ aɪm ˈnæroʊɪŋ daʊn ə ˈfleɪki tɛst/",
+              "ptTranslation": "Eu terminei a migração ontem e agora estou isolando um teste intermitente.",
+              "phoneticsTip": "Pronuncie 'migration' com /aɪ/ claro na primeira sílaba e evite transformar 'test' em 'testi' com vogal extra no final."
+            }
+          },
+          {
+            "stepOrder": 2,
+            "payload": {
+              "type": "listening_repeat",
+              "sentence": "Before we merge this PR, let's make sure we're on the same page about edge cases.",
+              "ipa": "/bɪˈfɔːr wi mɜːrdʒ ðɪs piːˈɑːr lɛts meɪk ʃʊr wɪr ɑːn ðə seɪm peɪdʒ əˈbaʊt ɛdʒ ˈkeɪsɪz/",
+              "contextHint": "Sugestão educada durante um code review antes de aprovar o merge.",
+              "connectedSpeechNote": "'make sure' soa quase contínuo (/meɪk ʃʊr/) e 'we're on' se junta em /wɪr‿ɑːn/."
+            }
+          },
+          {
+            "stepOrder": 3,
+            "payload": {
+              "type": "open_qa",
+              "question": "Give a quick 20-second daily standup update: what you shipped yesterday, today's focus, and any blocker.",
+              "ptContext": "Estruture em 3 frases curtas (ontem, hoje, bloqueio) com ritmo objetivo de standup.",
+              "suggestedSeconds": 20,
+              "expectedTopics": [
+                "Yesterday's completed work",
+                "Today's main priority",
+                "Current blocker or confirmation that nothing blocks you"
+              ],
+              "starterChips": [
+                "Yesterday I wrapped up...",
+                "Today I'm focusing on...",
+                "My only blocker right now is..."
+              ]
+            }
+          },
+          {
+            "stepOrder": 4,
+            "payload": {
+              "type": "micro_writing",
+              "scenario": "Your pull request has been waiting for review since yesterday, and another task depends on it.",
+              "taskPrompt": "Write a polite Slack ping to a teammate asking for a review and offering a quick walkthrough if needed.",
+              "targetExpressions": [
+                "reach out",
+                "on the same page",
+                "edge cases"
+              ],
+              "starterChips": [
+                "Hey! Reaching out about PR #...",
+                "Just want to make sure we're on the same page...",
+                "Happy to do a 5-minute walkthrough if..."
+              ],
+              "sampleAnswer": "Hey! Reaching out to see if you have 10 minutes to review PR #42 today. I added tests for the edge cases we discussed, and I'm happy to jump on a quick call so we're on the same page before merging."
+            }
+          },
+          {
+            "stepOrder": 5,
+            "payload": {
+              "type": "roleplay",
+              "persona": "Maya, Tech Lead facilitating the morning standup.",
+              "scenario": "You need help unblocking a failing staging build caused by an environment variable mismatch.",
+              "openingLine": "Morning! How is the authentication PR looking for today's release?",
+              "objectives": [
+                "Share your progress since yesterday clearly",
+                "Explain the staging blocker without sounding vague",
+                "Ask Maya who you should reach out to for staging permissions"
+              ],
+              "starterChips": [
+                "The PR itself is ready, however...",
+                "I've narrowed the failure down to...",
+                "Should I reach out to DevOps or..."
+              ],
+              "maxTurns": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "daily-conversation",
+    "level": "A2",
+    "category": "daily",
+    "titlePt": "Conversação & Situações Reais",
+    "titleEn": "Everyday Conversation & Listening",
+    "descriptionPt": "Treine ritmo natural, pedidos educados e compreensão auditiva com cenários práticos do dia a dia.",
+    "descriptionEn": "Build natural rhythm, polite requests, and listening fluency across everyday scenarios.",
+    "orderIndex": 3,
+    "lessons": [
+      {
+        "slug": "daily-conversation-coffee-orders",
+        "titlePt": "Cafeterias, Pedidos e Preferências",
+        "titleEn": "Coffee Shops, Orders & Preferences",
+        "xpReward": 85,
+        "cheatSheet": [
+          {
+            "term": "grab a coffee",
+            "ipa": "/ɡræb ə ˈkɔːfi/",
+            "meaningPt": "pegar um café rápido",
+            "example": "Do you want to grab a coffee before the workshop starts?"
+          },
+          {
+            "term": "run late",
+            "ipa": "/rʌn leɪt/",
+            "meaningPt": "estar atrasado",
+            "example": "Sorry, traffic is heavy and I'm running ten minutes late."
+          },
+          {
+            "term": "could I get",
+            "ipa": "/kʊd aɪ ɡɛt/",
+            "meaningPt": "poderia me ver / eu gostaria de pedir (educado e natural)",
+            "example": "Could I get a medium iced latte with oat milk, please?"
+          }
+        ],
+        "activities": [
+          {
+            "stepOrder": 1,
+            "payload": {
+              "type": "shadowing",
+              "sentence": "Could I get an iced oat latte and a toasted bagel, please?",
+              "ipa": "/kʊd aɪ ɡɛt æn aɪst oʊt ˈlɑːteɪ ænd ə ˈtoʊstɪd ˈbeɪɡəl pliːz/",
+              "ptTranslation": "Você poderia me ver um latte gelado com leite de aveia e um bagel tostado, por favor?",
+              "phoneticsTip": "Mantenha 'bagel' com /eɪ/ na primeira sílaba e atenção ao Dark L no final (/ˈbeɪɡəl/), evitando transformar o 'l' em 'u'."
+            }
+          },
+          {
+            "stepOrder": 2,
+            "payload": {
+              "type": "listening_repeat",
+              "sentence": "I'm running about ten minutes late — could we push our coffee back slightly?",
+              "ipa": "/aɪm ˈrʌnɪŋ əˈbaʊt tɛn ˈmɪnɪts leɪt kʊd wi pʊʃ ˈaʊər ˈkɔːfi bæk ˈslaɪtli/",
+              "contextHint": "Avisando um amigo com educação que você vai atrasar alguns minutos.",
+              "connectedSpeechNote": "'running about' liga em /ˈrʌnɪŋ‿əˈbaʊt/ e 'push our' flui sem pausa forte."
+            }
+          },
+          {
+            "stepOrder": 3,
+            "payload": {
+              "type": "open_qa",
+              "question": "What do you usually order at a coffee shop or bakery, and when do you like to go there?",
+              "ptContext": "Pratique preferências cotidianas usando expressões naturais como 'usually grab' ou 'prefer'.",
+              "suggestedSeconds": 20,
+              "expectedTopics": [
+                "Your usual drink or food order",
+                "Time of day or routine context",
+                "One preference (e.g., iced vs hot, less sugar)"
+              ],
+              "starterChips": [
+                "Whenever I grab a coffee, I usually order...",
+                "I prefer it with...",
+                "My favorite time to go is..."
+              ]
+            }
+          },
+          {
+            "stepOrder": 4,
+            "payload": {
+              "type": "micro_writing",
+              "scenario": "Your train stopped for 10 minutes, and you're meeting a friend at a café at 3:00 PM.",
+              "taskPrompt": "Send a friendly 2-sentence text message letting them know you're running late and suggesting what to do.",
+              "targetExpressions": [
+                "running late",
+                "grab a table",
+                "push back"
+              ],
+              "starterChips": [
+                "Hey! So sorry, I'm running about...",
+                "Feel free to grab a table and order...",
+                "Should we push our chat back by..."
+              ],
+              "sampleAnswer": "Hey! So sorry, my train stopped and I'm running about ten minutes late. Feel free to grab a table and order first — I'll be there by 3:10!"
+            }
+          },
+          {
+            "stepOrder": 5,
+            "payload": {
+              "type": "roleplay",
+              "persona": "Sam, a friendly barista at a busy neighborhood café.",
+              "scenario": "You are ordering a drink and pastry for dine-in, and the barista asks about milk options and allergies.",
+              "openingLine": "Hi there! What can I get started for you today — for here or to go?",
+              "objectives": [
+                "Order a customized drink politely using 'Could I get...'",
+                "Specify whether your order is for here or to go",
+                "Confirm one detail such as milk type or receipt"
+              ],
+              "starterChips": [
+                "Hi! For here, please. Could I get...",
+                "Do you have oat milk or...",
+                "Could you also warm up..."
+              ],
+              "maxTurns": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "international-travel",
+    "level": "B1",
+    "category": "travel",
+    "titlePt": "Viagens Internacionais, Aeroportos & Hotel",
+    "titleEn": "International Travel, Airports & Hotels",
+    "descriptionPt": "Resolva check-in, imigração, conexões atrasadas e solicitações de hospedagem com naturalidade.",
+    "descriptionEn": "Handle check-in, customs, missed connections, and hotel requests with confidence.",
+    "orderIndex": 4,
+    "lessons": [
+      {
+        "slug": "international-travel-missed-connections",
+        "titlePt": "Voos Atrasados & Remarcação",
+        "titleEn": "Flight Delays & Rebooking Options",
+        "xpReward": 115,
+        "cheatSheet": [
+          {
+            "term": "boarding pass",
+            "ipa": "/ˈbɔːrdɪŋ pæs/",
+            "meaningPt": "cartão de embarque",
+            "example": "Please keep your boarding pass handy at the transfer desk."
+          },
+          {
+            "term": "missed connection",
+            "ipa": "/mɪst kəˈnɛkʃən/",
+            "meaningPt": "conexão perdida",
+            "example": "Because of the storm, several passengers had a missed connection."
+          },
+          {
+            "term": "put me on standby",
+            "ipa": "/pʊt mi ɑːn ˈstændbaɪ/",
+            "meaningPt": "me colocar na lista de espera de um voo anterior",
+            "example": "Could you put me on standby for the 4 PM flight?"
+          }
+        ],
+        "activities": [
+          {
+            "stepOrder": 1,
+            "payload": {
+              "type": "shadowing",
+              "sentence": "My connecting flight was delayed, so I'm worried I might miss my boarding window.",
+              "ipa": "/maɪ kəˈnɛktɪŋ flaɪt wʌz dɪˈleɪd soʊ aɪm ˈwɜːrid aɪ maɪt mɪs maɪ ˈbɔːrdɪŋ ˈwɪndoʊ/",
+              "ptTranslation": "Meu voo de conexão atrasou, então estou preocupado de perder a janela de embarque.",
+              "phoneticsTip": "Em 'worried', evite pronunciar um /r/ forte como no português caipira; faça o som central americano /ˈwɜːrid/."
+            }
+          },
+          {
+            "stepOrder": 2,
+            "payload": {
+              "type": "listening_repeat",
+              "sentence": "Could you check if there's an earlier seat available or put me on standby?",
+              "ipa": "/kʊd juː tʃɛk ɪf ðɛrz æn ˈɜːrliər siːt əˈveɪləbəl ɔːr pʊt mi ɑːn ˈstændbaɪ/",
+              "contextHint": "Pergunta objetiva no balcão da companhia aérea tentando embarcar antes.",
+              "connectedSpeechNote": "'Could you' frequentemente reduz para /kʊdʒə/ em fala rápida; 'seat available' junta /t‿ə/."
+            }
+          },
+          {
+            "stepOrder": 3,
+            "payload": {
+              "type": "open_qa",
+              "question": "What steps would you take first if your international flight got delayed by three hours?",
+              "ptContext": "Explique em 2 a 3 frases o que você verificaria primeiro (conexão, hotel, mensagem para quem vai te buscar).",
+              "suggestedSeconds": 20,
+              "expectedTopics": [
+                "Checking the connecting flight or airline counter",
+                "Notifying hotel, host, or pickup contact",
+                "Asking about rebooking or meal vouchers"
+              ],
+              "starterChips": [
+                "The first thing I would do is...",
+                "Next, I'd reach out to...",
+                "If I missed my connection, I would ask..."
+              ]
+            }
+          },
+          {
+            "stepOrder": 4,
+            "payload": {
+              "type": "micro_writing",
+              "scenario": "Your flight landed two hours late, so you will arrive at your hotel after midnight.",
+              "taskPrompt": "Write a short message to the hotel front desk asking them to keep your reservation active and confirm late check-in.",
+              "targetExpressions": [
+                "delayed flight",
+                "late check-in",
+                "keep my reservation"
+              ],
+              "starterChips": [
+                "Hello, my flight into town was delayed...",
+                "I expect to arrive around...",
+                "Could you please keep my reservation active for..."
+              ],
+              "sampleAnswer": "Hello, my flight was delayed by two hours, so I now expect to arrive around 12:30 AM. Could you please confirm late check-in and keep my reservation active under Marcus Silva? Thank you!"
+            }
+          },
+          {
+            "stepOrder": 5,
+            "payload": {
+              "type": "roleplay",
+              "persona": "Elena, an airline customer service agent at the transfer counter.",
+              "scenario": "Your first leg arrived late and you missed your flight to London. You need the next flight and want to know what happens to your checked bag.",
+              "openingLine": "Good afternoon, I see your flight just arrived late. May I scan your boarding pass so we can check rebooking options?",
+              "objectives": [
+                "Explain clearly that you had a missed connection",
+                "Ask for the next available seat or standby option",
+                "Confirm whether your checked luggage transfers automatically"
+              ],
+              "starterChips": [
+                "Yes, here is my boarding pass. Unfortunately...",
+                "What is the earliest flight with...",
+                "Will my checked bag transfer automatically to..."
+              ],
+              "maxTurns": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "career-interviews",
+    "level": "B2",
+    "category": "career",
+    "titlePt": "Entrevistas Técnicas & Projetos Passados",
+    "titleEn": "Tech Interviews & Past Project Storytelling",
+    "descriptionPt": "Estruture respostas com método STAR, explique decisões técnicas e demonstre ownership em inglês.",
+    "descriptionEn": "Structure STAR interview answers, explain technical decisions, and show ownership in English.",
+    "orderIndex": 5,
+    "lessons": [
+      {
+        "slug": "career-interviews-star-storytelling",
+        "titlePt": "Explicando Projetos com Método STAR",
+        "titleEn": "Explaining Impact with the STAR Method",
+        "xpReward": 130,
+        "cheatSheet": [
+          {
+            "term": "bottleneck",
+            "ipa": "/ˈbɑːtəlˌnɛk/",
+            "meaningPt": "gargalo de performance ou processo",
+            "example": "Database lock contention was the main bottleneck during checkout."
+          },
+          {
+            "term": "take ownership",
+            "ipa": "/teɪk ˈoʊnərʃɪp/",
+            "meaningPt": "assumir responsabilidade ponta a ponta",
+            "example": "I took ownership of profiling the API and documenting the fix."
+          },
+          {
+            "term": "walk through",
+            "ipa": "/wɔːk θruː/",
+            "meaningPt": "explicar passo a passo",
+            "example": "Let me walk you through the root cause and the metrics afterward."
+          },
+          {
+            "term": "measurable impact",
+            "ipa": "/ˈmɛʒərəbəl ˈɪmpækt/",
+            "meaningPt": "impacto mensurável / comprovado por números",
+            "example": "The index change had a measurable impact, cutting latency by 45%."
+          }
+        ],
+        "activities": [
+          {
+            "stepOrder": 1,
+            "payload": {
+              "type": "shadowing",
+              "sentence": "When we noticed a database bottleneck, I took ownership of profiling the slowest queries.",
+              "ipa": "/wɛn wi ˈnoʊtɪst ə ˈdeɪtəbeɪs ˈbɑːtəlˌnɛk aɪ tʊk ˈoʊnərʃɪp ʌv ˈproʊfaɪlɪŋ ðə ˈsloʊɪst ˈkwɪriz/",
+              "ptTranslation": "Quando percebemos um gargalo no banco de dados, assumi a responsabilidade de analisar as queries mais lentas.",
+              "phoneticsTip": "Atenção em 'noticed' (/ˈnoʊtɪst/, sem som extra depois do 't') e na sílaba tônica inicial de 'database' (/ˈdeɪtəbeɪs/)."
+            }
+          },
+          {
+            "stepOrder": 2,
+            "payload": {
+              "type": "listening_repeat",
+              "sentence": "Walking stakeholders through the root cause helped us avoid rolling back the whole release.",
+              "ipa": "/ˈwɔːkɪŋ ˈsteɪkhoʊldərz θruː ðə ruːt kɔːz hɛlpt ʌs əˈvɔɪd ˈroʊlɪŋ bæk ðə hoʊl rɪˈliːs/",
+              "contextHint": "Mostrando maturidade técnica ao explicar a causa raiz em vez de apenas desfazer o deploy.",
+              "connectedSpeechNote": "'root cause' tem foco tônico forte nas duas palavras; 'helped us' liga em /hɛlpt‿ʌs/."
+            }
+          },
+          {
+            "stepOrder": 3,
+            "payload": {
+              "type": "open_qa",
+              "question": "Tell me about a tough bug or performance issue you solved recently and its measurable impact.",
+              "ptContext": "Use a estrutura STAR (Situação, Ação sua e Resultado em métricas) mantendo foco em o que VOCÊ fez.",
+              "suggestedSeconds": 20,
+              "expectedTopics": [
+                "Clear problem or bottleneck context",
+                "Specific action and ownership you took",
+                "Concrete outcome or lesson learned"
+              ],
+              "starterChips": [
+                "In my previous project, we ran into a bottleneck where...",
+                "I took ownership of investigating it by...",
+                "As a measurable impact, we reduced..."
+              ]
+            }
+          },
+          {
+            "stepOrder": 4,
+            "payload": {
+              "type": "micro_writing",
+              "scenario": "After a behavioral interview, you want to send a brief follow-up email reinforcing your enthusiasm and clarifying one architecture point.",
+              "taskPrompt": "Write a 3-4 sentence follow-up email thanking the interviewer and briefly highlighting your relevant experience.",
+              "targetExpressions": [
+                "walk through",
+                "take ownership",
+                "measurable impact"
+              ],
+              "starterChips": [
+                "Thank you for taking the time to walk me through...",
+                "I especially enjoyed discussing how your team...",
+                "Where I've delivered measurable impact is..."
+              ],
+              "sampleAnswer": "Hi Jordan, thank you for taking the time to walk me through the team's roadmap today. I enjoyed discussing how your platform handles high-throughput jobs, as taking ownership of queue bottlenecks was where I delivered the biggest measurable impact in my last role. Looking forward to the next steps!"
+            }
+          },
+          {
+            "stepOrder": 5,
+            "payload": {
+              "type": "roleplay",
+              "persona": "Jordan, Senior Engineering Manager interviewing you for a Full-Stack Engineer role.",
+              "scenario": "Behavioral deep-dive on how you investigate production bugs and collaborate across teams.",
+              "openingLine": "Thanks for joining! To start off, could you walk me through a technical challenge where you had to take ownership under a tight deadline?",
+              "objectives": [
+                "Set the context and explain why the issue mattered",
+                "Describe concrete steps you personally executed",
+                "State a measurable impact or post-mortem improvement"
+              ],
+              "starterChips": [
+                "Sure — last quarter we hit a bottleneck when...",
+                "To narrow down the root cause, I...",
+                "The measurable impact was that..."
+              ],
+              "maxTurns": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "system-design-c1",
+    "level": "C1",
+    "category": "tech",
+    "titlePt": "System Design, Trade-offs & Arquitetura",
+    "titleEn": "System Design Trade-offs & Architecture",
+    "descriptionPt": "Debata escalabilidade, latência vs consistência e pontos únicos de falha com vocabulário executivo C1.",
+    "descriptionEn": "Debate scalability, latency vs consistency, and failure resilience with C1 engineering nuance.",
+    "orderIndex": 6,
+    "lessons": [
+      {
+        "slug": "system-design-c1-caching-consistency",
+        "titlePt": "Caching, Latência & Consistência Eventual",
+        "titleEn": "Caching vs Eventual Consistency",
+        "xpReward": 150,
+        "cheatSheet": [
+          {
+            "term": "trade-off",
+            "ipa": "/ˈtreɪd ɔːf/",
+            "meaningPt": "equilíbrio entre vantagens e desvantagens de uma escolha",
+            "example": "Storing denormalized summaries improves reads, with the trade-off of extra sync logic."
+          },
+          {
+            "term": "single point of failure",
+            "ipa": "/ˈsɪŋɡəl pɔɪnt ʌv ˈfeɪljər/",
+            "meaningPt": "ponto único de falha",
+            "example": "A single un-replicated auth service becomes a single point of failure."
+          },
+          {
+            "term": "graceful degradation",
+            "ipa": "/ˈɡreɪsfəl ˌdɛɡrəˈdeɪʃən/",
+            "meaningPt": "degradação controlada sem derrubar o fluxo principal",
+            "example": "We baked graceful degradation into recommendations so checkout stays fast."
+          },
+          {
+            "term": "diminishing returns",
+            "ipa": "/dɪˈmɪnɪʃɪŋ rɪˈtɜːrnz/",
+            "meaningPt": "retornos decrescentes diante de complexidade adicional",
+            "example": "Splitting into twenty microservices right now hits diminishing returns."
+          }
+        ],
+        "activities": [
+          {
+            "stepOrder": 1,
+            "payload": {
+              "type": "shadowing",
+              "sentence": "Adding a distributed cache slashes read latency, though the trade-off is eventual consistency.",
+              "ipa": "/ˈædɪŋ ə dɪˈstrɪbjuːtɪd kætʃ ˈslæʃɪz riːd ˈleɪtənsi ðoʊ ðə ˈtreɪd ɔːf ɪz ɪˈvɛntʃuəl kənˈsɪstənsi/",
+              "ptTranslation": "Adicionar um cache distribuído reduz drasticamente a latência de leitura, embora o trade-off seja a consistência eventual.",
+              "phoneticsTip": "Pronuncie 'cache' como /kætʃ/ ou /kæʃ/ (nunca 'cachê' em duas sílabas) e mantenha 'though' bem suave com /ðoʊ/."
+            }
+          },
+          {
+            "stepOrder": 2,
+            "payload": {
+              "type": "listening_repeat",
+              "sentence": "If we bake graceful degradation into the gateway, one downstream outage won't trigger cascading failures.",
+              "ipa": "/ɪf wi beɪk ˈɡreɪsfəl ˌdɛɡrəˈdeɪʃən ˈɪntuː ðə ˈɡeɪtweɪ wʌn ˈdaʊnstriːm ˈaʊtɪdʒ woʊnt ˈtrɪɡər kæsˈkeɪdɪŋ ˈfeɪljərz/",
+              "contextHint": "Defendendo resiliência arquitetural durante uma revisão de RFC.",
+              "connectedSpeechNote": "'bake graceful' exige pausa curta para não embolar o /k/; 'won't trigger' usa parada glotal sutil no 't'."
+            }
+          },
+          {
+            "stepOrder": 3,
+            "payload": {
+              "type": "open_qa",
+              "question": "When choosing between strong consistency and lower read latency, how do you decide which trade-off fits the product?",
+              "ptContext": "Apresente critérios práticos (ex.: fluxo financeiro vs feed/analytics) usando linguagem analítica C1.",
+              "suggestedSeconds": 20,
+              "expectedTopics": [
+                "Example where strong consistency is non-negotiable",
+                "Example where eventual consistency + caching shines",
+                "Operational complexity or invalidation risk"
+              ],
+              "starterChips": [
+                "It largely hinges on the domain: for billing or inventory...",
+                "By contrast, on read-heavy dashboards the trade-off...",
+                "Beyond latency, we also have to weigh..."
+              ]
+            }
+          },
+          {
+            "stepOrder": 4,
+            "payload": {
+              "type": "micro_writing",
+              "scenario": "A teammate proposed introducing Redis cluster caching and Kafka event invalidation for an internal admin tool with 200 users.",
+              "taskPrompt": "Write a concise, diplomatic RFC comment pushing back on complexity and suggesting a simpler alternative.",
+              "targetExpressions": [
+                "diminishing returns",
+                "trade-off",
+                "single point of failure"
+              ],
+              "starterChips": [
+                "I appreciate the scalability angle here, though at 200 internal users...",
+                "Introducing both Redis and Kafka might hit diminishing returns because...",
+                "As a simpler trade-off, could we start with..."
+              ],
+              "sampleAnswer": "I appreciate thinking ahead on latency, though for 200 internal users introducing both Redis clustering and Kafka invalidation feels like diminishing returns. We'd add two new moving parts — and potential single points of failure — just to shave off a few milliseconds. As a pragmatic trade-off, let's index the reporting view first and revisit distributed caching only if p95 latency crosses 300ms."
+            }
+          },
+          {
+            "stepOrder": 5,
+            "payload": {
+              "type": "roleplay",
+              "persona": "Priya, Staff Engineer challenging your architecture proposal during a System Design review.",
+              "scenario": "You proposed putting an in-memory cache in front of user permissions, and Priya questions stale authorization risks.",
+              "openingLine": "Caching permission lookups definitely cuts database load, but what happens if a user's access is revoked and the cache serves stale roles for five minutes?",
+              "objectives": [
+                "Acknowledge the security trade-off directly without being defensive",
+                "Propose a concrete mitigation (short TTL, explicit invalidation event, or split critical vs non-critical checks)",
+                "Explain how graceful degradation works if the cache layer fails"
+              ],
+              "starterChips": [
+                "That's a fair concern — stale revocations are unacceptable, so...",
+                "We can mitigate that trade-off by...",
+                "If the cache layer degrades, requests should..."
+              ],
+              "maxTurns": 4
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
