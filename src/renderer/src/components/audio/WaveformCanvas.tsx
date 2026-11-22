@@ -39,20 +39,24 @@ export function WaveformCanvas({
     const container = containerRef.current
     if (!canvas || !container) return
 
+    let rafId: number | null = null
+
     const draw = (): void => {
       const rect = container.getBoundingClientRect()
       const width = Math.max(200, Math.floor(rect.width))
       const height = Math.max(56, Math.floor(rect.height))
       const dpr = window.devicePixelRatio || 1
 
-      canvas.width = width * dpr
-      canvas.height = height * dpr
-      canvas.style.width = `${width}px`
-      canvas.style.height = `${height}px`
+      const targetPixelW = Math.floor(width * dpr)
+      const targetPixelH = Math.floor(height * dpr)
+      if (canvas.width !== targetPixelW || canvas.height !== targetPixelH) {
+        canvas.width = targetPixelW
+        canvas.height = targetPixelH
+      }
 
       const ctx = canvas.getContext('2d')
       if (!ctx) return
-      ctx.scale(dpr, dpr)
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       ctx.clearRect(0, 0, width, height)
 
       // Subtle timeline gridlines
@@ -97,11 +101,24 @@ export function WaveformCanvas({
       }
     }
 
+    const scheduleDraw = (): void => {
+      if (rafId !== null) return
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        draw()
+      })
+    }
+
     draw()
 
-    const observer = new ResizeObserver(() => draw())
+    const observer = new ResizeObserver(() => scheduleDraw())
     observer.observe(container)
-    return () => observer.disconnect()
+    return () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId)
+      }
+      observer.disconnect()
+    }
   }, [isRecording, liveSamples, recordedPeaks])
 
   return (

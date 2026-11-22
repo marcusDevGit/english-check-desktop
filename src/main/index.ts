@@ -68,6 +68,15 @@ function createMainWindow(): BrowserWindow {
     win.show()
   })
 
+  win.webContents.on('did-fail-load', (_event, errorCode, errorDescription) => {
+    console.error('Main window failed to load:', errorCode, errorDescription)
+    if (!win.isDestroyed()) win.show()
+  })
+
+  win.webContents.on('render-process-gone', (_event, details) => {
+    console.error('Renderer process exited unexpectedly:', details.reason)
+  })
+
   // Hide to Windows System Tray instead of quitting so Pomodoro & Ctrl+Shift+E keep running.
   win.on('close', (event) => {
     if (!isQuittingApp) {
